@@ -73,38 +73,37 @@ function App() {
   }, [state.aiMode, state.status, state.currentPiece, state.aiThinking, makeAIDecisionAndExecute]);
 
   return (
-    <div className="app">
+    <div className="app-root">
       <header className="header">
         <h1>俄罗斯方块</h1>
         <p>经典游戏，现代体验</p>
       </header>
 
-      <main className="main">
-        <div className="game-container">
+      <main className="main-layout">
+        <div className="game-flex">
           <div className="game-area">
             <GameBoard gameState={state} />
-            
-            <div className="side-panel">
-              <NextPiece nextPiece={state.nextPiece} />
-              <ScoreBoard gameState={state} />
-              <SpeedControl 
-                currentSpeed={state.manualSpeed}
-                onSpeedChange={setManualSpeed}
-                actualDropSpeed={state.dropSpeed}
-              />
-              <AIControl
-                aiMode={state.aiMode}
-                aiLevel={state.aiLevel}
-                aiThinking={state.aiThinking}
-                onToggleAIMode={toggleAIMode}
-                onSetAILevel={setAILevel}
-              />
-            </div>
           </div>
-
+          <aside className="side-panel">
+            <NextPiece nextPiece={state.nextPiece} />
+            <ScoreBoard gameState={state} />
+            <SpeedControl 
+              currentSpeed={state.manualSpeed}
+              onSpeedChange={setManualSpeed}
+              actualDropSpeed={state.dropSpeed}
+            />
+            <AIControl
+              aiMode={state.aiMode}
+              aiLevel={state.aiLevel}
+              aiThinking={state.aiThinking}
+              onToggleAIMode={toggleAIMode}
+              onSetAILevel={setAILevel}
+            />
+          </aside>
+        </div>
+        <div className="controls-bar">
           <Controls />
         </div>
-
         {state.status === 'gameOver' && (
           <GameOver 
             gameState={state} 
