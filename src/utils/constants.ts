@@ -20,6 +20,16 @@ export const SPEED_CONFIG = {
   INITIAL_DROP_SPEED: 1000, // 初始下落速度 (ms)
   SPEED_INCREASE: 50,       // 每级增加的速度 (ms)
   MIN_DROP_SPEED: 100,      // 最小下落速度 (ms)
+  MAX_DROP_SPEED: 2000,     // 最大下落速度 (ms)
+  SPEED_STEP: 100,          // 速度调整步长 (ms)
+};
+
+// 速度等级配置
+export const SPEED_LEVELS = {
+  SLOW: 1500,      // 慢速
+  NORMAL: 1000,    // 正常
+  FAST: 500,       // 快速
+  VERY_FAST: 200,  // 极快
 };
 
 // 分数配置

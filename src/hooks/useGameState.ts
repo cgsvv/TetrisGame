@@ -27,6 +27,14 @@ const initialState: GameState = {
   status: 'idle',
   dropTime: 0,
   dropSpeed: SPEED_CONFIG.INITIAL_DROP_SPEED,
+  manualSpeed: SPEED_CONFIG.INITIAL_DROP_SPEED,
+};
+
+// 计算实际下落速度（考虑手动调整和等级）
+const calculateActualDropSpeed = (level: number, manualSpeed: number): number => {
+  const levelSpeed = calculateDropSpeed(level);
+  // 手动速度优先级更高，取较小值（更快的速度）
+  return Math.min(manualSpeed, levelSpeed);
 };
 
 // 放置当前方块的辅助函数
@@ -48,7 +56,7 @@ const placeCurrentPiece = (state: GameState): GameState => {
   const newLevel = calculateLevel(newLines);
   
   // 计算新的下落速度
-  const newDropSpeed = calculateDropSpeed(newLevel);
+  const newDropSpeed = calculateActualDropSpeed(newLevel, state.manualSpeed);
   
   // 创建新方块
   const newCurrentPiece = createNewPiece(state.nextPiece);
@@ -88,6 +96,7 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
         status: 'playing',
         currentPiece: createNewPiece(state.nextPiece),
         nextPiece: generateNextPiece(),
+        manualSpeed: state.manualSpeed, // 保持手动速度设置
       };
 
     case 'PAUSE_GAME':
@@ -103,7 +112,10 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       };
 
     case 'RESET_GAME':
-      return initialState;
+      return {
+        ...initialState,
+        manualSpeed: state.manualSpeed, // 保持手动速度设置
+      };
 
     case 'MOVE_PIECE':
       if (state.status !== 'playing' || !state.currentPiece) {
@@ -149,7 +161,7 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       const newState = {
         ...state,
         currentPiece: newPiece,
-        score: state.score + (dropDistance * SCORE_CONFIG.HARD_DROP),
+        score: state.score + (dropDistance * 2), // 硬下落每格2分
       };
 
       return placeCurrentPiece(newState);
@@ -182,6 +194,18 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       return {
         ...state,
         status: 'gameOver',
+      };
+
+    case 'SET_MANUAL_SPEED':
+      const newManualSpeed = Math.max(
+        SPEED_CONFIG.MIN_DROP_SPEED,
+        Math.min(SPEED_CONFIG.MAX_DROP_SPEED, action.speed)
+      );
+      const actualSpeed = calculateActualDropSpeed(state.level, newManualSpeed);
+      return {
+        ...state,
+        manualSpeed: newManualSpeed,
+        dropSpeed: actualSpeed,
       };
 
     default:
@@ -229,6 +253,10 @@ export const useGameState = () => {
     dispatch({ type: 'GAME_OVER' });
   }, []);
 
+  const setManualSpeed = useCallback((speed: number) => {
+    dispatch({ type: 'SET_MANUAL_SPEED', speed });
+  }, []);
+
   return {
     state,
     actions: {
@@ -241,6 +269,7 @@ export const useGameState = () => {
       dropPiece,
       updateGame,
       gameOver,
+      setManualSpeed,
     },
   };
 }; 

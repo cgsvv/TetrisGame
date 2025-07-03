@@ -4,6 +4,7 @@ import { NextPiece } from './components/NextPiece';
 import { ScoreBoard } from './components/ScoreBoard';
 import { Controls } from './components/Controls';
 import { GameOver } from './components/GameOver';
+import { SpeedControl } from './components/SpeedControl';
 import { useGameState } from './hooks/useGameState';
 import { useGameLoop } from './hooks/useGameLoop';
 import { useKeyboard } from './hooks/useKeyboard';
@@ -38,6 +39,11 @@ function App() {
       <div className="side-panel">
         <ScoreBoard gameState={state} />
         <NextPiece nextPiece={state.nextPiece} />
+        <SpeedControl 
+          currentSpeed={state.manualSpeed}
+          onSpeedChange={actions.setManualSpeed}
+          actualDropSpeed={state.dropSpeed}
+        />
         <Controls />
       </div>
       

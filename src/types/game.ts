@@ -31,6 +31,7 @@ export interface GameState {
   status: GameStatus;
   dropTime: number;
   dropSpeed: number;
+  manualSpeed: number; // 手动调整的速度
 }
 
 // 游戏动作类型
@@ -43,4 +44,5 @@ export type GameAction =
   | { type: 'ROTATE_PIECE' }
   | { type: 'DROP_PIECE' }
   | { type: 'UPDATE_GAME' }
-  | { type: 'GAME_OVER' }; 
+  | { type: 'GAME_OVER' }
+  | { type: 'SET_MANUAL_SPEED'; speed: number }; 
