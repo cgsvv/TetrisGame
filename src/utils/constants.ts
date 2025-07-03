@@ -6,13 +6,13 @@ export const BOARD_HEIGHT = 20;
 
 // 方块颜色映射
 export const TETROMINO_COLORS: Record<TetrominoType, string> = {
-  I: '#00f5ff', // 青色
-  O: '#ffff00', // 黄色
-  T: '#a000f0', // 紫色
-  S: '#00f000', // 绿色
-  Z: '#f00000', // 红色
-  J: '#0000f0', // 蓝色
-  L: '#ffa500', // 橙色
+  I: '#00bcd4', // 深青色
+  O: '#ffc107', // 深黄色
+  T: '#9c27b0', // 深紫色
+  S: '#4caf50', // 深绿色
+  Z: '#f44336', // 深红色
+  J: '#2196f3', // 深蓝色
+  L: '#ff9800', // 深橙色
 };
 
 // 游戏速度配置
@@ -43,7 +43,7 @@ export const KEY_MAPPING = {
   LEFT: ['ArrowLeft', 'a', 'A'],
   RIGHT: ['ArrowRight', 'd', 'D'],
   DOWN: ['ArrowDown', 's', 'S'],
-  ROTATE: ['ArrowUp', 'w', 'W', ' '], // 空格键也可以旋转
+  ROTATE: ['ArrowUp', 'w', 'W'], // 移除空格键
   DROP: [' '], // 空格键硬下落
   PAUSE: ['p', 'P', 'Escape'],
   START: ['Enter'],

@@ -53,7 +53,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({ gameState }) => {
 
   const getCellStyle = (cellValue: number | string, row: number, col: number) => {
     const baseStyle = {
-      backgroundColor: cellValue === 0 ? 'transparent' : TETROMINO_COLORS[cellValue as keyof typeof TETROMINO_COLORS],
+      backgroundColor: cellValue === 0 ? undefined : TETROMINO_COLORS[cellValue as keyof typeof TETROMINO_COLORS],
     };
 
     const isCurrentPiece = currentPiece && 
