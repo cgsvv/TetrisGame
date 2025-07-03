@@ -1,5 +1,4 @@
 import React from 'react';
-import { KEY_MAPPING } from '../utils/constants';
 
 export const Controls: React.FC = () => {
   return (

@@ -1,20 +1,14 @@
 import { useReducer, useCallback } from 'react';
-import { GameState, GameAction } from '../types/game';
+import { GameState, GameAction, AILevel } from '../types/game';
 import { 
   createEmptyBoard, 
   createNewPiece, 
   generateNextPiece, 
-  isGameOver,
-  movePiece as movePieceLogic,
-  rotatePiece as rotatePieceLogic,
-  hardDropPiece,
-  placePiece,
-  clearLines,
-  calculateScore,
-  calculateLevel,
-  calculateDropSpeed
+  isValidPosition, 
+  placePiece, 
+  clearLines 
 } from '../utils/gameLogic';
-import { SPEED_CONFIG, SCORE_CONFIG } from '../utils/constants';
+import { TETROMINOS } from '../utils/tetrominos';
 
 // 初始游戏状态
 const initialState: GameState = {
@@ -22,198 +16,206 @@ const initialState: GameState = {
   currentPiece: null,
   nextPiece: generateNextPiece(),
   score: 0,
-  level: 0,
+  level: 1,
   lines: 0,
   status: 'idle',
   dropTime: 0,
-  dropSpeed: SPEED_CONFIG.INITIAL_DROP_SPEED,
-  manualSpeed: SPEED_CONFIG.INITIAL_DROP_SPEED,
+  dropSpeed: 1000,
+  manualSpeed: 1,
+  aiMode: false,
+  aiThinking: false,
+  aiLevel: 'normal',
 };
 
-// 计算实际下落速度（考虑手动调整和等级）
-const calculateActualDropSpeed = (level: number, manualSpeed: number): number => {
-  const levelSpeed = calculateDropSpeed(level);
-  // 手动速度优先级更高，取较小值（更快的速度）
-  return Math.min(manualSpeed, levelSpeed);
-};
-
-// 放置当前方块的辅助函数
-const placeCurrentPiece = (state: GameState): GameState => {
-  if (!state.currentPiece) return state;
-
-  // 放置方块到游戏板
-  const newBoard = placePiece(state.currentPiece, state.board);
-  
-  // 清除完整的行
-  const { newBoard: clearedBoard, linesCleared } = clearLines(newBoard);
-  
-  // 计算新分数
-  const scoreIncrease = calculateScore(linesCleared, state.level);
-  const newScore = state.score + scoreIncrease;
-  
-  // 计算新等级
-  const newLines = state.lines + linesCleared;
-  const newLevel = calculateLevel(newLines);
-  
-  // 计算新的下落速度
-  const newDropSpeed = calculateActualDropSpeed(newLevel, state.manualSpeed);
-  
-  // 创建新方块
-  const newCurrentPiece = createNewPiece(state.nextPiece);
-  const newNextPiece = generateNextPiece();
-  
-  // 检查游戏是否结束
-  if (isGameOver(clearedBoard)) {
-    return {
-      ...state,
-      board: clearedBoard,
-      score: newScore,
-      lines: newLines,
-      level: newLevel,
-      status: 'gameOver',
-    };
-  }
-  
-  return {
-    ...state,
-    board: clearedBoard,
-    currentPiece: newCurrentPiece,
-    nextPiece: newNextPiece,
-    score: newScore,
-    lines: newLines,
-    level: newLevel,
-    dropSpeed: newDropSpeed,
-    dropTime: Date.now(),
-  };
-};
-
-// 游戏状态reducer
+// 游戏状态更新函数
 const gameReducer = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
     case 'START_GAME':
       return {
-        ...initialState,
-        status: 'playing',
+        ...state,
+        board: createEmptyBoard(),
         currentPiece: createNewPiece(state.nextPiece),
         nextPiece: generateNextPiece(),
-        manualSpeed: state.manualSpeed, // 保持手动速度设置
+        score: 0,
+        level: 1,
+        lines: 0,
+        status: 'playing',
+        dropTime: 0,
+        dropSpeed: 1000,
       };
 
     case 'PAUSE_GAME':
       return {
         ...state,
-        status: 'paused',
+        status: state.status === 'playing' ? 'paused' : state.status,
       };
 
     case 'RESUME_GAME':
       return {
         ...state,
-        status: 'playing',
+        status: state.status === 'paused' ? 'playing' : state.status,
       };
 
     case 'RESET_GAME':
       return {
         ...initialState,
-        manualSpeed: state.manualSpeed, // 保持手动速度设置
+        aiMode: state.aiMode,
+        aiLevel: state.aiLevel,
       };
 
-    case 'MOVE_PIECE':
-      if (state.status !== 'playing' || !state.currentPiece) {
-        return state;
+    case 'MOVE_PIECE': {
+      if (!state.currentPiece || state.status !== 'playing') return state;
+
+      const { direction } = action;
+      const newPosition = { ...state.currentPiece.position };
+
+      switch (direction) {
+        case 'left':
+          newPosition.x -= 1;
+          break;
+        case 'right':
+          newPosition.x += 1;
+          break;
+        case 'down':
+          newPosition.y += 1;
+          break;
       }
 
-      const movedPiece = movePieceLogic(state.currentPiece, action.direction, state.board);
-      if (movedPiece) {
-        return {
-          ...state,
-          currentPiece: movedPiece,
-        };
+      const newPiece = { ...state.currentPiece, position: newPosition };
+
+      if (isValidPosition(newPiece, state.board)) {
+        return { ...state, currentPiece: newPiece };
       }
 
-      // 如果向下移动失败，尝试放置方块
-      if (action.direction === 'down') {
+      // 如果是向下移动且无效，则放置方块
+      if (direction === 'down') {
         return placeCurrentPiece(state);
       }
 
       return state;
+    }
 
-    case 'ROTATE_PIECE':
-      if (state.status !== 'playing' || !state.currentPiece) {
-        return state;
+    case 'ROTATE_PIECE': {
+      if (!state.currentPiece || state.status !== 'playing') return state;
+
+      const shapes = TETROMINOS[state.currentPiece.type];
+      const currentIndex = shapes.findIndex(shape => 
+        JSON.stringify(shape) === JSON.stringify(state.currentPiece!.shape)
+      );
+      const nextIndex = (currentIndex + 1) % shapes.length;
+      const nextShape = shapes[nextIndex];
+
+      const newPiece = { ...state.currentPiece, shape: nextShape };
+
+      if (isValidPosition(newPiece, state.board)) {
+        return { ...state, currentPiece: newPiece };
       }
 
-      const rotatedPiece = rotatePieceLogic(state.currentPiece, state.board);
-      if (rotatedPiece) {
+      return state;
+    }
+
+    case 'DROP_PIECE': {
+      if (!state.currentPiece || state.status !== 'playing') return state;
+
+      // 硬下落：直接移动到底部
+      let newPosition = { ...state.currentPiece.position };
+      while (isValidPosition({ ...state.currentPiece, position: { ...newPosition, y: newPosition.y + 1 } }, state.board)) {
+        newPosition.y += 1;
+      }
+
+      const newPiece = { ...state.currentPiece, position: newPosition };
+      return placeCurrentPiece({ ...state, currentPiece: newPiece });
+    }
+
+    case 'UPDATE_GAME': {
+      if (state.status !== 'playing') return state;
+
+      const newDropTime = state.dropTime + state.dropSpeed / state.manualSpeed;
+
+      if (newDropTime >= 1000) {
         return {
           ...state,
-          currentPiece: rotatedPiece,
+          dropTime: 0,
+          ...(state.currentPiece ? movePieceDown(state) : spawnNewPiece(state)),
         };
       }
 
-      return state;
-
-    case 'DROP_PIECE':
-      if (state.status !== 'playing' || !state.currentPiece) {
-        return state;
-      }
-
-      const { newPiece, dropDistance } = hardDropPiece(state.currentPiece, state.board);
-      const newState = {
-        ...state,
-        currentPiece: newPiece,
-        score: state.score + (dropDistance * 2), // 硬下落每格2分
-      };
-
-      return placeCurrentPiece(newState);
-
-    case 'UPDATE_GAME':
-      if (state.status !== 'playing' || !state.currentPiece) {
-        return state;
-      }
-
-      const now = Date.now();
-      if (now - state.dropTime > state.dropSpeed) {
-        const movedPiece = movePieceLogic(state.currentPiece, 'down', state.board);
-        if (movedPiece) {
-          return {
-            ...state,
-            currentPiece: movedPiece,
-            dropTime: now,
-          };
-        } else {
-          return placeCurrentPiece({
-            ...state,
-            dropTime: now,
-          });
-        }
-      }
-
-      return state;
+      return { ...state, dropTime: newDropTime };
+    }
 
     case 'GAME_OVER':
-      return {
-        ...state,
-        status: 'gameOver',
-      };
+      return { ...state, status: 'gameOver' };
 
     case 'SET_MANUAL_SPEED':
-      const newManualSpeed = Math.max(
-        SPEED_CONFIG.MIN_DROP_SPEED,
-        Math.min(SPEED_CONFIG.MAX_DROP_SPEED, action.speed)
-      );
-      const actualSpeed = calculateActualDropSpeed(state.level, newManualSpeed);
-      return {
-        ...state,
-        manualSpeed: newManualSpeed,
-        dropSpeed: actualSpeed,
-      };
+      return { ...state, manualSpeed: action.speed };
+
+    case 'TOGGLE_AI_MODE':
+      return { ...state, aiMode: !state.aiMode };
+
+    case 'SET_AI_LEVEL':
+      return { ...state, aiLevel: action.level };
+
+    case 'SET_AI_THINKING':
+      return { ...state, aiThinking: action.thinking };
 
     default:
       return state;
   }
 };
 
-// 游戏状态管理Hook
+// 移动方块向下
+const movePieceDown = (state: GameState): Partial<GameState> => {
+  if (!state.currentPiece) return {};
+
+  const newPosition = { ...state.currentPiece.position, y: state.currentPiece.position.y + 1 };
+  const newPiece = { ...state.currentPiece, position: newPosition };
+
+  if (isValidPosition(newPiece, state.board)) {
+    return { currentPiece: newPiece };
+  } else {
+    return placeCurrentPiece(state);
+  }
+};
+
+// 生成新方块
+const spawnNewPiece = (state: GameState): Partial<GameState> => {
+  const newPiece = createNewPiece(state.nextPiece);
+  const nextPiece = generateNextPiece();
+
+  if (!isValidPosition(newPiece, state.board)) {
+    return { status: 'gameOver' as const };
+  }
+
+  return {
+    currentPiece: newPiece,
+    nextPiece,
+  };
+};
+
+// 放置当前方块
+const placeCurrentPiece = (state: GameState): GameState => {
+  if (!state.currentPiece) return state;
+
+  const newBoard = placePiece(state.currentPiece, state.board);
+  const { newBoard: clearedBoard, linesCleared } = clearLines(newBoard);
+
+  const newLines = state.lines + linesCleared;
+  const newLevel = Math.floor(newLines / 10) + 1;
+  const newScore = state.score + linesCleared * 100 * newLevel;
+  const newDropSpeed = Math.max(100, 1000 - (newLevel - 1) * 100);
+
+  return {
+    ...state,
+    board: clearedBoard,
+    currentPiece: null,
+    dropSpeed: newDropSpeed,
+    lines: newLines,
+    level: newLevel,
+    score: newScore,
+  };
+};
+
+// 游戏状态Hook
 export const useGameState = () => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
@@ -249,27 +251,35 @@ export const useGameState = () => {
     dispatch({ type: 'UPDATE_GAME' });
   }, []);
 
-  const gameOver = useCallback(() => {
-    dispatch({ type: 'GAME_OVER' });
-  }, []);
-
   const setManualSpeed = useCallback((speed: number) => {
     dispatch({ type: 'SET_MANUAL_SPEED', speed });
   }, []);
 
+  const toggleAIMode = useCallback(() => {
+    dispatch({ type: 'TOGGLE_AI_MODE' });
+  }, []);
+
+  const setAILevel = useCallback((level: AILevel) => {
+    dispatch({ type: 'SET_AI_LEVEL', level });
+  }, []);
+
+  const setAIThinking = useCallback((thinking: boolean) => {
+    dispatch({ type: 'SET_AI_THINKING', thinking });
+  }, []);
+
   return {
     state,
-    actions: {
-      startGame,
-      pauseGame,
-      resumeGame,
-      resetGame,
-      movePiece,
-      rotatePiece,
-      dropPiece,
-      updateGame,
-      gameOver,
-      setManualSpeed,
-    },
+    startGame,
+    pauseGame,
+    resumeGame,
+    resetGame,
+    movePiece,
+    rotatePiece,
+    dropPiece,
+    updateGame,
+    setManualSpeed,
+    toggleAIMode,
+    setAILevel,
+    setAIThinking,
   };
 }; 

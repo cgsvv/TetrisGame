@@ -1,4 +1,4 @@
-import { GameState, CurrentPiece, Position, TetrominoType } from '../types/game';
+import { CurrentPiece, TetrominoType } from '../types/game';
 import { BOARD_WIDTH, BOARD_HEIGHT, SPEED_CONFIG, SCORE_CONFIG, LEVEL_CONFIG } from './constants';
 import { TETROMINOS, getRandomTetromino, getInitialPosition } from './tetrominos';
 

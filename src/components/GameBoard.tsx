@@ -1,5 +1,5 @@
 import React from 'react';
-import { GameState, CurrentPiece } from '../types/game';
+import { GameState } from '../types/game';
 import { BOARD_WIDTH, BOARD_HEIGHT, TETROMINO_COLORS } from '../utils/constants';
 import styles from '../styles/GameBoard.module.css';
 
@@ -12,7 +12,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({ gameState }) => {
 
   // 创建包含当前方块的完整游戏板
   const getFullBoard = (): (number | string)[][] => {
-    const fullBoard = board.map(row => [...row]);
+    const fullBoard = board.map(row => [...row]) as (number | string)[][];
 
     if (currentPiece) {
       const { shape, position, type } = currentPiece;
@@ -24,7 +24,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({ gameState }) => {
             const boardX = position.x + col;
             
             if (boardY >= 0 && boardY < BOARD_HEIGHT && boardX >= 0 && boardX < BOARD_WIDTH) {
-              fullBoard[boardY][boardX] = type;
+              fullBoard[boardY][boardX] = type as string;
             }
           }
         }
