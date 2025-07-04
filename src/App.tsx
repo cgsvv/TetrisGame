@@ -22,6 +22,7 @@ import { useGameState } from './hooks/useGameState';
 import { useGameLoop } from './hooks/useGameLoop';
 import { useKeyboard } from './hooks/useKeyboard';
 import { useAI } from './hooks/useAI';
+import { usePageTitle } from './hooks/usePageTitle';
 
 // 样式导入
 import './styles/global.css';
@@ -213,18 +214,27 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <div className="app-wrapper">
-          <Navigation />
-          <div className="content-wrapper">
-            <Routes>
-              <Route path="/" element={<GamePage />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
-            </Routes>
-          </div>
-        </div>
+        <AppContent />
       </Router>
     </QueryClientProvider>
   );
 }
+
+// 内部组件，在Router上下文中使用
+const AppContent: React.FC = () => {
+  usePageTitle(); // 在Router内部使用页面标题hook
+
+  return (
+    <div className="app-wrapper">
+      <Navigation />
+      <div className="content-wrapper">
+        <Routes>
+          <Route path="/" element={<GamePage />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+        </Routes>
+      </div>
+    </div>
+  );
+};
 
 export default App; 
