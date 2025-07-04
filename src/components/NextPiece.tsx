@@ -15,7 +15,7 @@ export const NextPiece: React.FC<NextPieceProps> = ({ nextPiece }) => {
 
   return (
     <div className="info-panel">
-      <h3>{t('下一个方块')}</h3>
+              <h3>{t('nextPiece')}</h3>
       <div style={{
         display: 'grid',
         gridTemplateColumns: `repeat(${shape[0].length}, 20px)`,

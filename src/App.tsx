@@ -148,8 +148,8 @@ const GamePage: React.FC = () => {
   return (
     <div className="app-root">
       <header className="header">
-        <h1>{t('俄罗斯方块')}</h1>
-        <p>{t('经典游戏，现代体验')}</p>
+        <h1>{t('tetris')}</h1>
+        <p>{t('classicGameModernExperience')}</p>
       </header>
 
       <main className="main-layout">
@@ -161,7 +161,7 @@ const GamePage: React.FC = () => {
             <NextPiece nextPiece={state.nextPiece} />
             <ScoreBoard gameState={state} />
             <Controls />
-            <CollapsePanel title="高级选项" defaultCollapsed={true}>
+            <CollapsePanel title={t('advancedOptions')} defaultCollapsed={true}>
               <div style={{ marginBottom: 16 }}>
                 <SpeedControl 
                   currentSpeed={state.manualSpeed}
@@ -199,8 +199,8 @@ const GamePage: React.FC = () => {
       </main>
 
       <footer className="footer">
-        <p>{t('使用 React + TypeScript + Vite 构建')}</p>
-        <p>{t('支持键盘控制：方向键移动，空格键旋转，回车键硬下落')}</p>
+        <p>{t('builtWithReactTypeScriptVite')}</p>
+        <p>{t('keyboardControls')}</p>
         <p style={{ marginTop: '8px', fontSize: '0.9rem', opacity: 0.8 }}>
           Powered By <span style={{ color: '#ffd700', fontWeight: '600' }}>@Victor</span>
         </p>

@@ -41,13 +41,13 @@ export const GameBoard: React.FC<GameBoardProps> = ({ gameState }) => {
   const getStatusText = () => {
     switch (status) {
       case 'idle':
-        return t('按 Enter 开始游戏');
+        return t('pressEnterToStart');
       case 'playing':
-        return t('游戏进行中');
+                  return t('gameInProgress');
       case 'paused':
-        return t('游戏暂停 - 按 P 继续');
+                  return t('pausedPressPToResume');
       case 'gameOver':
-        return t('游戏结束');
+                  return t('gameOver');
       default:
         return '';
     }
@@ -112,7 +112,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({ gameState }) => {
       
       {status === 'idle' && (
         <div className={styles.startPrompt}>
-          {t('使用方向键控制方块移动和旋转')}
+          {t('useArrowKeysToMoveAndRotate')}
         </div>
       )}
     </div>

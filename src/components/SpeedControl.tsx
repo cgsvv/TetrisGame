@@ -12,7 +12,7 @@ export const SpeedControl: React.FC<SpeedControlProps> = ({ currentSpeed, onSpee
   const { t } = useTranslation();
   return (
     <div className={styles.speedControl}>
-      <div className={styles.title}>{t('速度控制')}</div>
+      <div className={styles.title}>{t('speedControl')}</div>
       <div className={styles.sliderContainer}>
         <input
           type="range"
@@ -25,7 +25,7 @@ export const SpeedControl: React.FC<SpeedControlProps> = ({ currentSpeed, onSpee
         <span className={styles.value}>{currentSpeed}</span>
       </div>
       <div className={styles.actualSpeed}>
-        {t('实际下落速度')}: {actualDropSpeed}ms
+        {t('actualDropSpeed')}: {actualDropSpeed}ms
       </div>
     </div>
   );

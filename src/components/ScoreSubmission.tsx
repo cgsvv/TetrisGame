@@ -21,7 +21,7 @@ export const ScoreSubmission: React.FC<ScoreSubmissionProps> = ({ score, level, 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim()) {
-      setError(t('请输入用户名'));
+      setError(t('pleaseEnterUsername'));
       return;
     }
     
@@ -36,7 +36,7 @@ export const ScoreSubmission: React.FC<ScoreSubmissionProps> = ({ score, level, 
         // 获取用户现有最高分
         const existingUser = await getUserBestScore(username.trim());
         if (existingUser && existingUser.score >= score) {
-          setError(t('你的分数没有超过现有记录'));
+          setError(t('scoreDoesntBeatRecord'));
           setSubmitting(false);
           return;
         }
@@ -54,7 +54,7 @@ export const ScoreSubmission: React.FC<ScoreSubmissionProps> = ({ score, level, 
       onSubmitted();
     } catch (err) {
       console.error('Submit score error:', err);
-      setError(t('提交失败，请重试'));
+              setError(t('submissionFailedPleaseRetry'));
     } finally {
       setSubmitting(false);
     }
@@ -63,36 +63,36 @@ export const ScoreSubmission: React.FC<ScoreSubmissionProps> = ({ score, level, 
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h2>{t('提交分数')}</h2>
+        <h2>{t('submitScore')}</h2>
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label>{t('用户名')}</label>
+            <label>{t('username')}</label>
             <input
               type="text"
               value={username}
               onChange={e => setUsername(e.target.value)}
               disabled={submitting}
               maxLength={16}
-              placeholder={t('请输入用户名')}
+                              placeholder={t('pleaseEnterUsername')}
             />
           </div>
           <div className={styles.formGroup}>
-            <span>{t('分数')}: {score.toLocaleString()}</span>
-            <span>{t('等级')}: {level}</span>
-            <span>{t('消除行数')}: {lines}</span>
+            <span>{t('score')}: {score.toLocaleString()}</span>
+            <span>{t('level')}: {level}</span>
+            <span>{t('lines')}: {lines}</span>
           </div>
           {existingScore !== null && (
             <div className={styles.existingScore}>
-              {t('现有最高分')}: {existingScore.toLocaleString()}
+              {t('currentBestScore')}: {existingScore.toLocaleString()}
             </div>
           )}
           {error && <div className={styles.error}>{error}</div>}
           <div className={styles.actions}>
             <button type="submit" disabled={submitting}>
-              {submitting ? t('提交中...') : t('提交分数')}
+              {submitting ? t('submitting') : t('submitScore')}
             </button>
             <button type="button" onClick={onClose} disabled={submitting}>
-              {t('关闭')}
+                              {t('close')}
             </button>
           </div>
         </form>

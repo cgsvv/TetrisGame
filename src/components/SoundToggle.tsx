@@ -22,7 +22,7 @@ export const SoundToggle: React.FC = () => {
         />
         <span className={styles.toggleSlider}></span>
         <span className={styles.toggleText}>
-          {muted ? t('音效已关闭') : t('音效已开启')}
+          {muted ? t('soundOff') : t('soundOn')}
         </span>
       </label>
     </div>

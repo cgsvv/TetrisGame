@@ -10,11 +10,11 @@ export const usePageTitle = () => {
     let title = '';
     
     if (location.pathname === '/') {
-      title = t('俄罗斯方块');
+      title = t('tetris');
     } else if (location.pathname === '/leaderboard') {
-      title = `${t('排行榜')} - ${t('俄罗斯方块')}`;
+      title = `${t('leaderboard')} - ${t('tetris')}`;
     } else {
-      title = t('俄罗斯方块');
+      title = t('tetris');
     }
 
     document.title = title;

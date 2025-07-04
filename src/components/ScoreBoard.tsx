@@ -12,17 +12,17 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({ gameState }) => {
 
   return (
     <div className="info-panel">
-      <h3>{t('游戏信息')}</h3>
+              <h3>{t('gameInfo')}</h3>
       <div className="info-item">
-        <span>{t('分数')}:</span>
+                  <span>{t('score')}:</span>
         <span className="info-value">{score.toLocaleString()}</span>
       </div>
       <div className="info-item">
-        <span>{t('等级')}:</span>
+                  <span>{t('level')}:</span>
         <span className="info-value">{level}</span>
       </div>
       <div className="info-item">
-        <span>{t('消除行数')}:</span>
+                  <span>{t('lines')}:</span>
         <span className="info-value">{lines}</span>
       </div>
     </div>

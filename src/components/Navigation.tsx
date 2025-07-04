@@ -16,13 +16,13 @@ export const Navigation: React.FC = () => {
           to="/" 
           className={`${styles.navLink} ${location.pathname === '/' ? styles.active : ''}`}
         >
-          🎮 {t('游戏')}
+          🎮 {t('game')}
         </Link>
         <Link 
           to="/leaderboard" 
           className={`${styles.navLink} ${location.pathname === '/leaderboard' ? styles.active : ''}`}
         >
-          🏆 {t('排行榜')}
+          🏆 {t('leaderboard')}
         </Link>
         <div style={{ flex: 1 }} />
         <SoundToggle />

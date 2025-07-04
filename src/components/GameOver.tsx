@@ -14,12 +14,12 @@ export const GameOver: React.FC<GameOverProps> = ({ gameState, onRestart }) => {
   return (
     <div className="game-over">
       <div className="game-over-content">
-        <h2>{t('游戏结束')}</h2>
-        <p>{t('最终分数')}: {score.toLocaleString()}</p>
-        <p>{t('达到等级')}: {level}</p>
-        <p>{t('消除行数')}: {lines}</p>
+        <h2>{t('gameOver')}</h2>
+        <p>{t('finalScore')}: {score.toLocaleString()}</p>
+        <p>{t('levelReached')}: {level}</p>
+        <p>{t('lines')}: {lines}</p>
         <button onClick={onRestart}>
-          {t('重新开始')}
+          {t('restart')}
         </button>
       </div>
     </div>

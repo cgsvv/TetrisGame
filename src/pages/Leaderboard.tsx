@@ -15,23 +15,23 @@ export const Leaderboard: React.FC = () => {
 
   return (
     <div className={styles.leaderboardPage}>
-      <h2>{t('排行榜')}</h2>
+              <h2>{t('leaderboard')}</h2>
       {isLoading ? (
-        <div>{t('加载中...')}</div>
+                  <div>{t('loading')}</div>
       ) : error ? (
         <div>
-          {t('加载失败')}
-          <button onClick={() => refetch()}>{t('重试')}</button>
+                      {t('loadFailed')}
+                      <button onClick={() => refetch()}>{t('retry')}</button>
         </div>
       ) : (
         <table className={styles.leaderboardTable}>
           <thead>
             <tr>
               <th>#</th>
-              <th>{t('用户名')}</th>
-              <th>{t('分数')}</th>
-              <th>{t('等级')}</th>
-              <th>{t('消除行数')}</th>
+              <th>{t('username')}</th>
+              <th>{t('score')}</th>
+              <th>{t('level')}</th>
+              <th>{t('lines')}</th>
             </tr>
           </thead>
           <tbody>
@@ -50,7 +50,7 @@ export const Leaderboard: React.FC = () => {
                 <td>{item.lines}</td>
               </tr>
             )) : (
-              <tr><td colSpan={5}>{t('暂无数据')}</td></tr>
+              <tr><td colSpan={5}>{t('noData')}</td></tr>
             )}
           </tbody>
         </table>
