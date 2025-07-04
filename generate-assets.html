@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Tetris Game Assets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .canvas-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        canvas {
+            border: 1px solid #444;
+            margin: 10px;
+        }
+        button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #357ABD;
+        }
+        .download-link {
+            display: inline-block;
+            margin: 10px;
+            color: #4A90E2;
+            text-decoration: none;
+        }
+        .download-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 Tetris Game Asset Generator</h1>
+    <p>Click the buttons below to generate and download the missing visual assets for your Tetris game.</p>
+
+    <div class="canvas-container">
+        <h2>PWA Icons</h2>
+        <button onclick="generateIcon(192)">Generate 192x192 Icon</button>
+        <button onclick="generateIcon(512)">Generate 512x512 Icon</button>
+        <div id="icon-container"></div>
+    </div>
+
+    <div class="canvas-container">
+        <h2>Social Media Images</h2>
+        <button onclick="generateOGImage()">Generate OG Image (1200x630)</button>
+        <button onclick="generateTwitterImage()">Generate Twitter Image (1200x600)</button>
+        <div id="social-container"></div>
+    </div>
+
+    <div class="canvas-container">
+        <h2>Screenshots</h2>
+        <button onclick="generateScreenshot()">Generate Screenshot (1280x720)</button>
+        <div id="screenshot-container"></div>
+    </div>
+
+    <script>
+        // Tetris block colors
+        const colors = [
+            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4',
+            '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F',
+            '#BB8FCE', '#85C1E9', '#F8C471', '#82E0AA'
+        ];
+
+        function createCanvas(width, height) {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            return canvas;
+        }
+
+        function drawTetrisBackground(ctx, width, height) {
+            // Gradient background
+            const gradient = ctx.createLinearGradient(0, 0, width, height);
+            gradient.addColorStop(0, '#1a1a1a');
+            gradient.addColorStop(1, '#2a2a2a');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw tetris blocks pattern
+            const blockSize = Math.min(width, height) / 20;
+            for (let x = 0; x < width; x += blockSize * 2) {
+                for (let y = 0; y < height; y += blockSize * 2) {
+                    if (Math.random() > 0.7) {
+                        ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                        ctx.fillRect(x, y, blockSize, blockSize);
+                    }
+                }
+            }
+        }
+
+        function drawText(ctx, text, x, y, fontSize, color = 'white') {
+            ctx.fillStyle = color;
+            ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.fillText(text, x, y);
+        }
+
+        function generateIcon(size) {
+            const canvas = createCanvas(size, size);
+            const ctx = canvas.getContext('2d');
+
+            // Background
+            drawTetrisBackground(ctx, size, size);
+
+            // Main tetris piece
+            const blockSize = size / 8;
+            const centerX = size / 2;
+            const centerY = size / 2;
+
+            // Draw a T-shaped tetris piece
+            const blocks = [
+                [0, -1], [0, 0], [0, 1], [-1, 0]
+            ];
+
+            blocks.forEach(([dx, dy]) => {
+                const x = centerX + dx * blockSize;
+                const y = centerY + dy * blockSize;
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                ctx.fillRect(x - blockSize/2, y - blockSize/2, blockSize, blockSize);
+                
+                // Add highlight
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.fillRect(x - blockSize/2, y - blockSize/2, blockSize, blockSize/4);
+            });
+
+            // Add text
+            drawText(ctx, 'TETRIS', centerX, size - size/6, size/8, '#4A90E2');
+
+            const container = document.getElementById('icon-container');
+            if (container) {
+                container.appendChild(canvas);
+            }
+            downloadCanvas(canvas, `icon-${size}x${size}.png`);
+        }
+
+        function generateOGImage() {
+            const canvas = createCanvas(1200, 630);
+            const ctx = canvas.getContext('2d');
+
+            // Background
+            drawTetrisBackground(ctx, 1200, 630);
+
+            // Title
+            drawText(ctx, 'TETRIS GAME', 600, 200, 72, '#4A90E2');
+            
+            // Subtitle
+            drawText(ctx, 'Classic Tetris with AI Assistant & Online Leaderboard', 600, 280, 32, '#FFFFFF');
+
+            // Features
+            const features = ['🎮 Classic Gameplay', '🤖 AI Assistant', '🏆 Online Leaderboard', '📱 Responsive Design'];
+            features.forEach((feature, index) => {
+                drawText(ctx, feature, 600, 380 + index * 40, 24, '#CCCCCC');
+            });
+
+            // Tetris blocks decoration
+            for (let i = 0; i < 10; i++) {
+                const x = 100 + i * 100;
+                const y = 500;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y, 60, 60);
+            }
+
+            const container = document.getElementById('social-container');
+            if (container) {
+                container.appendChild(canvas);
+            }
+            downloadCanvas(canvas, 'og-image.png');
+        }
+
+        function generateTwitterImage() {
+            const canvas = createCanvas(1200, 600);
+            const ctx = canvas.getContext('2d');
+
+            // Background
+            drawTetrisBackground(ctx, 1200, 600);
+
+            // Title
+            drawText(ctx, 'TETRIS GAME', 600, 180, 64, '#4A90E2');
+            
+            // Subtitle
+            drawText(ctx, 'Play the classic game with modern features', 600, 250, 28, '#FFFFFF');
+
+            // Game preview mockup
+            const gameX = 600;
+            const gameY = 350;
+            const gameWidth = 400;
+            const gameHeight = 200;
+
+            // Game board background
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(gameX - gameWidth/2, gameY - gameHeight/2, gameWidth, gameHeight);
+
+            // Draw some tetris blocks
+            const blockSize = 20;
+            for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 4; j++) {
+                    if (Math.random() > 0.5) {
+                        const x = gameX - gameWidth/2 + i * blockSize;
+                        const y = gameY - gameHeight/2 + j * blockSize;
+                        ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                        ctx.fillRect(x, y, blockSize, blockSize);
+                    }
+                }
+            }
+
+            const container = document.getElementById('social-container');
+            if (container) {
+                container.appendChild(canvas);
+            }
+            downloadCanvas(canvas, 'twitter-image.png');
+        }
+
+        function generateScreenshot() {
+            const canvas = createCanvas(1280, 720);
+            const ctx = canvas.getContext('2d');
+
+            // Background
+            drawTetrisBackground(ctx, 1280, 720);
+
+            // Header
+            drawText(ctx, 'TETRIS GAME', 640, 80, 48, '#4A90E2');
+            drawText(ctx, 'Classic Game, Modern Experience', 640, 120, 24, '#FFFFFF');
+
+            // Game area mockup
+            const gameX = 640;
+            const gameY = 360;
+            const gameWidth = 300;
+            const gameHeight = 600;
+
+            // Game board
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(gameX - gameWidth/2, gameY - gameHeight/2, gameWidth, gameHeight);
+            ctx.strokeStyle = '#4A90E2';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(gameX - gameWidth/2, gameY - gameHeight/2, gameWidth, gameHeight);
+
+            // Draw tetris blocks in game area
+            const blockSize = 25;
+            for (let i = 0; i < 12; i++) {
+                for (let j = 0; j < 24; j++) {
+                    if (Math.random() > 0.7) {
+                        const x = gameX - gameWidth/2 + i * blockSize;
+                        const y = gameY - gameHeight/2 + j * blockSize;
+                        ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                        ctx.fillRect(x, y, blockSize, blockSize);
+                    }
+                }
+            }
+
+            // Side panel mockup
+            const sideX = gameX + gameWidth/2 + 100;
+            const sideY = gameY;
+            
+            // Score panel
+            ctx.fillStyle = '#2a2a2a';
+            ctx.fillRect(sideX - 150, sideY - 200, 300, 400);
+            ctx.strokeStyle = '#4A90E2';
+            ctx.strokeRect(sideX - 150, sideY - 200, 300, 400);
+
+            drawText(ctx, 'SCORE: 12500', sideX, sideY - 150, 20, '#FFFFFF');
+            drawText(ctx, 'LEVEL: 5', sideX, sideY - 100, 20, '#FFFFFF');
+            drawText(ctx, 'LINES: 23', sideX, sideY - 50, 20, '#FFFFFF');
+
+            const container = document.getElementById('screenshot-container');
+            if (container) {
+                container.appendChild(canvas);
+            }
+            downloadCanvas(canvas, 'screenshot.png');
+        }
+
+        function downloadCanvas(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.textContent = `Download ${filename}`;
+            link.className = 'download-link';
+            
+            // Find the appropriate container based on filename
+            let container;
+            if (filename.includes('icon-')) {
+                container = document.getElementById('icon-container');
+            } else if (filename.includes('og-image') || filename.includes('twitter-image')) {
+                container = document.getElementById('social-container');
+            } else if (filename.includes('screenshot')) {
+                container = document.getElementById('screenshot-container');
+            }
+            
+            if (container) {
+                container.appendChild(link);
+            } else {
+                // Fallback: append to body
+                document.body.appendChild(link);
+            }
+        }
+
+        // Auto-generate all assets on page load
+        window.onload = function() {
+            // Wait for DOM to be fully loaded
+            setTimeout(() => {
+                try {
+                    generateIcon(192);
+                    generateIcon(512);
+                    generateOGImage();
+                    generateTwitterImage();
+                    generateScreenshot();
+                } catch (error) {
+                    console.error('Error generating assets:', error);
+                }
+            }, 200);
+        };
+    </script>
+</body>
+</html> 

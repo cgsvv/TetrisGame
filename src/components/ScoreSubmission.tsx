@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { submitScore, checkUsernameExists, getUserBestScore } from '../lib/leaderboard';
 import styles from '../styles/ScoreSubmission.module.css';
+import { safeTrackGameEvent } from './GoogleAnalytics';
 
 interface ScoreSubmissionProps {
   score: number;
@@ -50,6 +51,9 @@ export const ScoreSubmission: React.FC<ScoreSubmissionProps> = ({ score, level, 
         level,
         lines
       });
+      
+      // Track score submission
+      safeTrackGameEvent.scoreSubmit(score);
       
       onSubmitted();
     } catch (err) {

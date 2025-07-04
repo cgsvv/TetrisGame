@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { setGlobalMute, getGlobalMute } from '../hooks/useSound';
 import styles from '../styles/SoundToggle.module.css';
 import { useTranslation } from 'react-i18next';
+import { safeTrackGameEvent } from './GoogleAnalytics';
 
 export const SoundToggle: React.FC = () => {
   const { t } = useTranslation();
@@ -17,7 +18,11 @@ export const SoundToggle: React.FC = () => {
         <input
           type="checkbox"
           checked={!muted}
-          onChange={() => setMuted((m) => !m)}
+          onChange={() => {
+            const newMuted = !muted;
+            setMuted(newMuted);
+            safeTrackGameEvent.soundToggle(!newMuted);
+          }}
           className={styles.toggleInput}
         />
         <span className={styles.toggleSlider}></span>

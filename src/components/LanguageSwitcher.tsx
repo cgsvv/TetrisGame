@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from '../styles/LanguageSwitcher.module.css';
+import { safeTrackGameEvent } from './GoogleAnalytics';
 
 const LANGS = [
   { code: 'zh', label: '中文' },
@@ -25,6 +26,7 @@ const LanguageSwitcher: React.FC = () => {
   const changeLang = (lng: string) => {
     i18n.changeLanguage(lng);
     localStorage.setItem('lang', lng);
+    safeTrackGameEvent.languageChange(lng);
     setOpen(false);
   };
 

@@ -17,6 +17,7 @@ import { SpeedControl } from './components/SpeedControl';
 import { AIControl } from './components/AIControl';
 import { CollapsePanel } from './components/CollapsePanel';
 import { SEOStructuredData } from './components/SEOStructuredData';
+import { GoogleAnalytics } from './components/GoogleAnalytics';
 
 // Hooks导入
 import { useGameState } from './hooks/useGameState';
@@ -228,6 +229,7 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="app-wrapper">
+      <GoogleAnalytics />
       <Navigation />
       <div className="content-wrapper">
         <Routes>

@@ -10,6 +10,7 @@ import {
 } from '../utils/gameLogic';
 import { TETROMINOS } from '../utils/tetrominos';
 import { useSound } from './useSound';
+import { safeTrackGameEvent } from '../components/GoogleAnalytics';
 
 // 初始游戏状态
 const initialState: GameState = {
@@ -34,6 +35,7 @@ const initialState: GameState = {
 const gameReducer = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
     case 'START_GAME':
+      safeTrackGameEvent.gameStart();
       return {
         ...state,
         board: createEmptyBoard(),
@@ -48,12 +50,18 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       };
 
     case 'PAUSE_GAME':
+      if (state.status === 'playing') {
+        safeTrackGameEvent.gamePause();
+      }
       return {
         ...state,
         status: state.status === 'playing' ? 'paused' : state.status,
       };
 
     case 'RESUME_GAME':
+      if (state.status === 'paused') {
+        safeTrackGameEvent.gameResume();
+      }
       return {
         ...state,
         status: state.status === 'paused' ? 'playing' : state.status,
@@ -147,13 +155,17 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
     }
 
     case 'GAME_OVER':
+      safeTrackGameEvent.gameOver(state.score, state.level, state.lines);
       return { ...state, status: 'gameOver' };
 
     case 'SET_MANUAL_SPEED':
+      safeTrackGameEvent.speedChange(action.speed);
       return { ...state, manualSpeed: action.speed };
 
     case 'TOGGLE_AI_MODE':
-      return { ...state, aiMode: !state.aiMode };
+      const newAiMode = !state.aiMode;
+      safeTrackGameEvent.aiModeToggle(newAiMode);
+      return { ...state, aiMode: newAiMode };
 
     case 'SET_AI_LEVEL':
       return { ...state, aiLevel: action.level };
