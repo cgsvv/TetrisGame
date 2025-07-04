@@ -15,6 +15,7 @@ import { useGameState } from './hooks/useGameState';
 import { useGameLoop } from './hooks/useGameLoop';
 import { useKeyboard } from './hooks/useKeyboard';
 import { useAI } from './hooks/useAI';
+import { CollapsePanel } from './components/CollapsePanel';
 import './styles/global.css';
 
 // 创建 React Query 客户端
@@ -128,22 +129,24 @@ const GamePage: React.FC = () => {
           <aside className="side-panel">
             <NextPiece nextPiece={state.nextPiece} />
             <ScoreBoard gameState={state} />
-            <SpeedControl 
-              currentSpeed={state.manualSpeed}
-              onSpeedChange={setManualSpeed}
-              actualDropSpeed={state.dropSpeed}
-            />
-            <AIControl
-              aiMode={state.aiMode}
-              aiLevel={state.aiLevel}
-              aiThinking={state.aiThinking}
-              onToggleAIMode={toggleAIMode}
-              onSetAILevel={setAILevel}
-            />
+            <Controls />
+            <CollapsePanel title="高级选项" defaultCollapsed={true}>
+              <div style={{ marginBottom: 16 }}>
+                <SpeedControl 
+                  currentSpeed={state.manualSpeed}
+                  onSpeedChange={setManualSpeed}
+                  actualDropSpeed={state.dropSpeed}
+                />
+              </div>
+              <AIControl
+                aiMode={state.aiMode}
+                aiLevel={state.aiLevel}
+                aiThinking={state.aiThinking}
+                onToggleAIMode={toggleAIMode}
+                onSetAILevel={setAILevel}
+              />
+            </CollapsePanel>
           </aside>
-        </div>
-        <div className="controls-bar">
-          <Controls />
         </div>
         
         {state.status === 'gameOver' && (
