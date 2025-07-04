@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>音效生成器</title>
+</head>
+<body>
+    <h1>俄罗斯方块音效生成器</h1>
+    <div id="controls">
+        <button onclick="generateMoveSound()">生成移动音效</button>
+        <button onclick="generateRotateSound()">生成旋转音效</button>
+        <button onclick="generateDropSound()">生成下落音效</button>
+        <button onclick="generateLandSound()">生成落地音效</button>
+        <button onclick="generateClearSound()">生成消行音效</button>
+        <button onclick="generateStartSound()">生成开始音效</button>
+        <button onclick="generatePauseSound()">生成暂停音效</button>
+        <button onclick="generateResumeSound()">生成恢复音效</button>
+        <button onclick="generateGameOverSound()">生成结束音效</button>
+    </div>
+    <div id="output"></div>
+
+    <script>
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const output = document.getElementById('output');
+
+        function createTone(frequency, duration, type = 'square') {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        function downloadWav(audioBuffer, filename) {
+            const wav = audioBufferToWav(audioBuffer);
+            const blob = new Blob([wav], { type: 'audio/wav' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function audioBufferToWav(buffer) {
+            const length = buffer.length;
+            const numberOfChannels = buffer.numberOfChannels;
+            const sampleRate = buffer.sampleRate;
+            const arrayBuffer = new ArrayBuffer(44 + length * numberOfChannels * 2);
+            const view = new DataView(arrayBuffer);
+            
+            // WAV header
+            const writeString = (offset, string) => {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            };
+            
+            writeString(0, 'RIFF');
+            view.setUint32(4, 36 + length * numberOfChannels * 2, true);
+            writeString(8, 'WAVE');
+            writeString(12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numberOfChannels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * numberOfChannels * 2, true);
+            view.setUint16(32, numberOfChannels * 2, true);
+            view.setUint16(34, 16, true);
+            writeString(36, 'data');
+            view.setUint32(40, length * numberOfChannels * 2, true);
+            
+            // Audio data
+            let offset = 44;
+            for (let i = 0; i < length; i++) {
+                for (let channel = 0; channel < numberOfChannels; channel++) {
+                    const sample = Math.max(-1, Math.min(1, buffer.getChannelData(channel)[i]));
+                    view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+                    offset += 2;
+                }
+            }
+            
+            return arrayBuffer;
+        }
+
+        function generateMoveSound() {
+            const duration = 0.1;
+            const buffer = audioContext.createBuffer(1, audioContext.sampleRate * duration, audioContext.sampleRate);
+            const channelData = buffer.getChannelData(0);
+            
+            for (let i = 0; i < channelData.length; i++) {
+                const t = i / audioContext.sampleRate;
+                const freq = 800 + Math.sin(t * 100) * 200;
+                channelData[i] = Math.sin(2 * Math.PI * freq * t) * 0.3 * Math.exp(-t * 10);
+            }
+            
+            downloadWav(buffer, 'move.wav');
+            output.innerHTML += '<p>✅ 移动音效已生成</p>';
+        }
+
+        function generateRotateSound() {
+            const duration = 0.15;
+            const buffer = audioContext.createBuffer(1, audioContext.sampleRate * duration, audioContext.sampleRate);
+            const channelData = buffer.getChannelData(0);
+            
+            for (let i = 0; i < channelData.length; i++) {
+                const t = i / audioContext.sampleRate;
+                const freq = 600 + Math.sin(t * 50) * 300;
+                channelData[i] = Math.sin(2 * Math.PI * freq * t) * 0.3 * Math.exp(-t * 8);
+            }
+            
+            downloadWav(buffer, 'rotate.wav');
+            output.innerHTML += '<p>✅ 旋转音效已生成</p>';
+        }
+
+        function generateDropSound() {
+            const duration = 0.2;
+            const buffer = audioContext.createBuffer(1, audioContext.sampleRate * duration, audioContext.sampleRate);
+            const channelData = buffer.getChannelData(0);
+            
+            for (let i = 0; i < channelData.length; i++) {
+                const t = i / audioContext.sampleRate;
+                const freq = 400 - t * 200;
+                channelData[i] = Math.sin(2 * Math.PI * freq * t) * 0.4 * Math.exp(-t * 5);
+            }
+            
+            downloadWav(buffer, 'drop.wav');
+            output.innerHTML += '<p>✅ 下落音效已生成</p>';
+        }
+
+        function generateLandSound() {
+            const duration = 0.25;
+            const buffer = audioContext.createBuffer(1, audioContext.sampleRate * duration, audioContext.sampleRate);
+            const channelData = buffer.getChannelData(0);
+            
+            for (let i = 0; i < channelData.length; i++) {
+                const t = i / audioContext.sampleRate;
+                const freq = 300 - t * 150;
+                channelData[i] = Math.sin(2 * Math.PI * freq * t) * 0.5 * Math.exp(-t * 4);
+            }
+            
+            downloadWav(buffer, 'land.wav');
+            output.innerHTML += '<p>✅ 落地音效已生成</p>';
+        }
+
+        function generateClearSound() {
+            const duration = 0.3;
+            const buffer = audioContext.createBuffer(1, audioContext.sampleRate * duration, audioContext.sampleRate);
+            const channelData = buffer.getChannelData(0);
+            
+            for (let i = 0; i < channelData.length; i++) {
+                const t = i / audioContext.sampleRate;
+                const freq = 800 + Math.sin(t * 20) * 400;
+                channelData[i] = Math.sin(2 * Math.PI * freq * t) * 0.4 * Math.exp(-t * 3);
+            }
+            
+            downloadWav(buffer, 'clear.wav');
+            output.innerHTML += '<p>✅ 消行音效已生成</p>';
+        }
+
+        function generateStartSound() {
+            const duration = 0.5;
+            const buffer = audioContext.createBuffer(1, audioContext.sampleRate * duration, audioContext.sampleRate);
+            const channelData = buffer.getChannelData(0);
+            
+            for (let i = 0; i < channelData.length; i++) {
+                const t = i / audioContext.sampleRate;
+                const freq = 400 + Math.sin(t * 10) * 200;
+                channelData[i] = Math.sin(2 * Math.PI * freq * t) * 0.3 * Math.exp(-t * 2);
+            }
+            
+            downloadWav(buffer, 'start.wav');
+            output.innerHTML += '<p>✅ 开始音效已生成</p>';
+        }
+
+        function generatePauseSound() {
+            const duration = 0.2;
+            const buffer = audioContext.createBuffer(1, audioContext.sampleRate * duration, audioContext.sampleRate);
+            const channelData = buffer.getChannelData(0);
+            
+            for (let i = 0; i < channelData.length; i++) {
+                const t = i / audioContext.sampleRate;
+                const freq = 500;
+                channelData[i] = Math.sin(2 * Math.PI * freq * t) * 0.3 * Math.exp(-t * 6);
+            }
+            
+            downloadWav(buffer, 'pause.wav');
+            output.innerHTML += '<p>✅ 暂停音效已生成</p>';
+        }
+
+        function generateResumeSound() {
+            const duration = 0.2;
+            const buffer = audioContext.createBuffer(1, audioContext.sampleRate * duration, audioContext.sampleRate);
+            const channelData = buffer.getChannelData(0);
+            
+            for (let i = 0; i < channelData.length; i++) {
+                const t = i / audioContext.sampleRate;
+                const freq = 600;
+                channelData[i] = Math.sin(2 * Math.PI * freq * t) * 0.3 * Math.exp(-t * 6);
+            }
+            
+            downloadWav(buffer, 'resume.wav');
+            output.innerHTML += '<p>✅ 恢复音效已生成</p>';
+        }
+
+        function generateGameOverSound() {
+            const duration = 1.0;
+            const buffer = audioContext.createBuffer(1, audioContext.sampleRate * duration, audioContext.sampleRate);
+            const channelData = buffer.getChannelData(0);
+            
+            for (let i = 0; i < channelData.length; i++) {
+                const t = i / audioContext.sampleRate;
+                const freq = 200 - t * 100;
+                channelData[i] = Math.sin(2 * Math.PI * freq * t) * 0.4 * Math.exp(-t * 1.5);
+            }
+            
+            downloadWav(buffer, 'gameover.wav');
+            output.innerHTML += '<p>✅ 结束音效已生成</p>';
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+    </style>
+</body>
+</html> 

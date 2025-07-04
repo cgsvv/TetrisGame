@@ -16,6 +16,7 @@ import { useGameLoop } from './hooks/useGameLoop';
 import { useKeyboard } from './hooks/useKeyboard';
 import { useAI } from './hooks/useAI';
 import { CollapsePanel } from './components/CollapsePanel';
+import { SoundToggle } from './components/SoundToggle';
 import './styles/global.css';
 
 // 创建 React Query 客户端
@@ -146,6 +147,7 @@ const GamePage: React.FC = () => {
                 onSetAILevel={setAILevel}
               />
             </CollapsePanel>
+            <SoundToggle />
           </aside>
         </div>
         

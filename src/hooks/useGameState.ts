@@ -9,6 +9,7 @@ import {
   clearLines 
 } from '../utils/gameLogic';
 import { TETROMINOS } from '../utils/tetrominos';
+import { useSound } from './useSound';
 
 // 初始游戏状态
 const initialState: GameState = {
@@ -183,6 +184,12 @@ const spawnNewPiece = (state: GameState): Partial<GameState> => {
   const nextPiece = generateNextPiece();
 
   if (!isValidPosition(newPiece, state.board)) {
+    // 游戏结束时播放音效
+    if (typeof window !== 'undefined') {
+      const audio = new Audio('/sounds/gameover.wav');
+      audio.volume = 0.5;
+      audio.play().catch(() => {}); // 忽略播放错误
+    }
     return { status: 'gameOver' as const };
   }
 
@@ -204,6 +211,20 @@ const placeCurrentPiece = (state: GameState): GameState => {
   const newScore = state.score + linesCleared * 100 * newLevel;
   const newDropSpeed = Math.max(100, 1000 - (newLevel - 1) * 100);
 
+  // 播放落地音效
+  if (typeof window !== 'undefined') {
+    const audio = new Audio('/sounds/land.wav');
+    audio.volume = 0.5;
+    audio.play().catch(() => {}); // 忽略播放错误
+  }
+
+  // 如果有消行，播放消行音效
+  if (linesCleared > 0 && typeof window !== 'undefined') {
+    const audio = new Audio('/sounds/clear.wav');
+    audio.volume = 0.5;
+    audio.play().catch(() => {}); // 忽略播放错误
+  }
+
   return {
     ...state,
     board: clearedBoard,
@@ -218,18 +239,22 @@ const placeCurrentPiece = (state: GameState): GameState => {
 // 游戏状态Hook
 export const useGameState = () => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
+  const { play } = useSound();
 
   const startGame = useCallback(() => {
     dispatch({ type: 'START_GAME' });
-  }, []);
+    play('start');
+  }, [play]);
 
   const pauseGame = useCallback(() => {
     dispatch({ type: 'PAUSE_GAME' });
-  }, []);
+    play('pause');
+  }, [play]);
 
   const resumeGame = useCallback(() => {
     dispatch({ type: 'RESUME_GAME' });
-  }, []);
+    play('resume');
+  }, [play]);
 
   const resetGame = useCallback(() => {
     dispatch({ type: 'RESET_GAME' });
@@ -237,15 +262,18 @@ export const useGameState = () => {
 
   const movePiece = useCallback((direction: 'left' | 'right' | 'down') => {
     dispatch({ type: 'MOVE_PIECE', direction });
-  }, []);
+    play('move');
+  }, [play]);
 
   const rotatePiece = useCallback(() => {
     dispatch({ type: 'ROTATE_PIECE' });
-  }, []);
+    play('rotate');
+  }, [play]);
 
   const dropPiece = useCallback(() => {
     dispatch({ type: 'DROP_PIECE' });
-  }, []);
+    play('drop');
+  }, [play]);
 
   const updateGame = useCallback(() => {
     dispatch({ type: 'UPDATE_GAME' });

@@ -1,0 +1,51 @@
+.soundToggle {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggleInput {
+  display: none;
+}
+
+.toggleSlider {
+  width: 36px;
+  height: 20px;
+  background: #ccc;
+  border-radius: 12px;
+  position: relative;
+  margin-right: 10px;
+  transition: background 0.2s;
+}
+
+.toggleInput:checked + .toggleSlider {
+  background: #4caf50;
+}
+
+.toggleSlider::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.toggleInput:checked + .toggleSlider::before {
+  transform: translateX(16px);
+}
+
+.toggleText {
+  font-size: 14px;
+  color: #666;
+} 
