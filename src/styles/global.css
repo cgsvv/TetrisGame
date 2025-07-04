@@ -13,6 +13,17 @@ body, html {
   color: #fff;
 }
 
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-wrapper {
+  flex: 1;
+  padding-top: 60px; /* 为固定导航栏留出空间 */
+}
+
 .app-root {
   min-height: 100vh;
   display: flex;

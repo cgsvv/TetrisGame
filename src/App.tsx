@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { GameBoard } from './components/GameBoard';
 import { NextPiece } from './components/NextPiece';
 import { ScoreBoard } from './components/ScoreBoard';
@@ -6,13 +8,27 @@ import { Controls } from './components/Controls';
 import { GameOver } from './components/GameOver';
 import { SpeedControl } from './components/SpeedControl';
 import { AIControl } from './components/AIControl';
+import { ScoreSubmission } from './components/ScoreSubmission';
+import { Navigation } from './components/Navigation';
+import { Leaderboard } from './pages/Leaderboard';
 import { useGameState } from './hooks/useGameState';
 import { useGameLoop } from './hooks/useGameLoop';
 import { useKeyboard } from './hooks/useKeyboard';
 import { useAI } from './hooks/useAI';
 import './styles/global.css';
 
-function App() {
+// 创建 React Query 客户端
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+// 游戏页面组件
+const GamePage: React.FC = () => {
   const {
     state,
     startGame,
@@ -41,6 +57,9 @@ function App() {
     onDropPiece: dropPiece,
     onSetAIThinking: setAIThinking,
   });
+
+  const [showScoreSubmission, setShowScoreSubmission] = useState(false);
+  const [hasSubmittedScore, setHasSubmittedScore] = useState(false);
 
   // 游戏循环
   useGameLoop({
@@ -71,6 +90,28 @@ function App() {
       return () => clearTimeout(timer);
     }
   }, [state.aiMode, state.status, state.currentPiece, state.aiThinking, makeAIDecisionAndExecute]);
+
+  // 游戏结束时显示分数提交
+  useEffect(() => {
+    if (state.status === 'gameOver' && !hasSubmittedScore) {
+      setShowScoreSubmission(true);
+    }
+  }, [state.status, hasSubmittedScore]);
+
+  const handleScoreSubmitted = () => {
+    setShowScoreSubmission(false);
+    setHasSubmittedScore(true);
+  };
+
+  const handleScoreSubmissionClose = () => {
+    setShowScoreSubmission(false);
+    setHasSubmittedScore(true);
+  };
+
+  const handleGameRestart = () => {
+    setHasSubmittedScore(false);
+    resetGame();
+  };
 
   return (
     <div className="app-root">
@@ -104,10 +145,21 @@ function App() {
         <div className="controls-bar">
           <Controls />
         </div>
+        
         {state.status === 'gameOver' && (
           <GameOver 
             gameState={state} 
-            onRestart={resetGame} 
+            onRestart={handleGameRestart} 
+          />
+        )}
+
+        {showScoreSubmission && (
+          <ScoreSubmission
+            score={state.score}
+            level={state.level}
+            lines={state.lines}
+            onClose={handleScoreSubmissionClose}
+            onSubmitted={handleScoreSubmitted}
           />
         )}
       </main>
@@ -117,6 +169,25 @@ function App() {
         <p>支持键盘控制：方向键移动，空格键旋转，回车键硬下落</p>
       </footer>
     </div>
+  );
+};
+
+// 主应用组件
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <div className="app-wrapper">
+          <Navigation />
+          <div className="content-wrapper">
+            <Routes>
+              <Route path="/" element={<GamePage />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+            </Routes>
+          </div>
+        </div>
+      </Router>
+    </QueryClientProvider>
   );
 }
 
