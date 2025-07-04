@@ -118,8 +118,8 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: localStorage.getItem('lang') || 'zh',
-    fallbackLng: 'zh',
+    lng: localStorage.getItem('lang') || 'en',
+    fallbackLng: 'en',
     interpolation: { escapeValue: false }
   });
 
