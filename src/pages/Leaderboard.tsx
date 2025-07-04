@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { getLeaderboard } from '../lib/leaderboard';
 import { LeaderboardEntry } from '../lib/supabase';
+import { SEOStructuredData } from '../components/SEOStructuredData';
 import styles from '../styles/Leaderboard.module.css';
 
 export const Leaderboard: React.FC = () => {
@@ -15,7 +16,8 @@ export const Leaderboard: React.FC = () => {
 
   return (
     <div className={styles.leaderboardPage}>
-              <h2>{t('leaderboard')}</h2>
+      <SEOStructuredData type="leaderboard" data={data} />
+      <h2>{t('leaderboard')}</h2>
       {isLoading ? (
                   <div>{t('loading')}</div>
       ) : error ? (

@@ -104,6 +104,19 @@ The project can be deployed to any static file hosting platform:
 - Alibaba Cloud OSS
 - Tencent Cloud COS
 
+### Current Deployment
+- **Domain**: https://tetris-game-sooty.vercel.app
+- **Platform**: Vercel
+- **Status**: Live
+
+### Updating Domain
+If you need to change the domain, use the provided script:
+```bash
+node scripts/update-domain.js https://your-new-domain.com
+```
+
+This will automatically update all SEO-related files with the new domain.
+
 ## License
 
 MIT License 

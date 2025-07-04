@@ -54,7 +54,17 @@ const resources = {
       "submissionFailedPleaseRetry": "Submission failed, please try again",
       "scoreDoesntBeatRecord": "Your score doesn't beat your existing record",
       "currentBestScore": "Current best score",
-      "submitting": "Submitting..."
+      "submitting": "Submitting...",
+      "pageTitle": {
+        "home": "Tetris Game - Classic Tetris with AI Assistant & Online Leaderboard",
+        "leaderboard": "Leaderboard - Tetris Game High Scores",
+        "default": "Tetris Game"
+      },
+      "pageDescription": {
+        "home": "Play the classic Tetris game with modern features: AI assistant, adjustable speed, online leaderboard, sound effects, and responsive design.",
+        "leaderboard": "View the top scores and rankings for the Tetris game. Compete with players worldwide and see who has the highest score.",
+        "default": "Play the classic Tetris game with modern features."
+      }
     }
   },
   zh: {
@@ -109,7 +119,17 @@ const resources = {
       "submissionFailedPleaseRetry": "提交失败，请重试",
       "scoreDoesntBeatRecord": "你的分数没有超过现有记录",
       "currentBestScore": "现有最高分",
-      "submitting": "提交中..."
+      "submitting": "提交中...",
+      "pageTitle": {
+        "home": "俄罗斯方块游戏 - 经典俄罗斯方块与AI助手和在线排行榜",
+        "leaderboard": "排行榜 - 俄罗斯方块游戏高分榜",
+        "default": "俄罗斯方块游戏"
+      },
+      "pageDescription": {
+        "home": "体验经典俄罗斯方块游戏，具备现代功能：AI助手、可调节速度、在线排行榜、音效和响应式设计。",
+        "leaderboard": "查看俄罗斯方块游戏的最高分和排名。与全球玩家竞争，看看谁获得最高分。",
+        "default": "体验经典俄罗斯方块游戏的现代功能。"
+      }
     }
   }
 };

@@ -16,6 +16,7 @@ import { Leaderboard } from './pages/Leaderboard';
 import { SpeedControl } from './components/SpeedControl';
 import { AIControl } from './components/AIControl';
 import { CollapsePanel } from './components/CollapsePanel';
+import { SEOStructuredData } from './components/SEOStructuredData';
 
 // Hooks导入
 import { useGameState } from './hooks/useGameState';
@@ -147,6 +148,7 @@ const GamePage: React.FC = () => {
 
   return (
     <div className="app-root">
+      <SEOStructuredData type="game" />
       <header className="header">
         <h1>{t('tetris')}</h1>
         <p>{t('classicGameModernExperience')}</p>

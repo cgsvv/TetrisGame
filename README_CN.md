@@ -104,6 +104,19 @@ src/
 - 阿里云 OSS
 - 腾讯云 COS
 
+### 当前部署
+- **域名**: https://tetris-game-sooty.vercel.app
+- **平台**: Vercel
+- **状态**: 在线
+
+### 更新域名
+如果需要更改域名，请使用提供的脚本：
+```bash
+node scripts/update-domain.js https://your-new-domain.com
+```
+
+这将自动更新所有 SEO 相关文件中的新域名。
+
 ## 许可证
 
 MIT License 
