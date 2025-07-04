@@ -1,46 +1,48 @@
-# 音效文件说明
+# Sound Files Guide
 
-请将以下音效文件放置在此目录中：
+[中文版 / Chinese Version](README_CN.md)
 
-## 必需音效文件
+Please place the following sound files in this directory:
 
-- `move.wav` - 方块移动音效（短促的点击声）
-- `rotate.wav` - 方块旋转音效（旋转音效）
-- `drop.wav` - 硬下落音效（快速下落音效）
-- `land.wav` - 方块落地音效（落地碰撞声）
-- `clear.wav` - 消行音效（消除成功音效）
-- `start.wav` - 游戏开始音效（开始提示音）
-- `pause.wav` - 游戏暂停音效（暂停提示音）
-- `resume.wav` - 游戏恢复音效（恢复提示音）
-- `gameover.wav` - 游戏结束音效（结束音效）
+## Required Sound Files
 
-## 音效文件要求
+- `move.wav` - Piece movement sound (short click sound)
+- `rotate.wav` - Piece rotation sound (rotation effect)
+- `drop.wav` - Hard drop sound (fast drop effect)
+- `land.wav` - Piece landing sound (landing collision)
+- `clear.wav` - Line clear sound (clear success effect)
+- `start.wav` - Game start sound (start prompt)
+- `pause.wav` - Game pause sound (pause prompt)
+- `resume.wav` - Game resume sound (resume prompt)
+- `gameover.wav` - Game over sound (end effect)
 
-- **格式**：WAV 格式（推荐）
-- **采样率**：44.1kHz
-- **时长**：0.5-2 秒
-- **音量**：适中，避免过于刺耳
-- **风格**：8-bit 复古风格或现代简洁风格
+## Sound File Requirements
 
-## 获取音效文件
+- **Format**: WAV format (recommended)
+- **Sample Rate**: 44.1kHz
+- **Duration**: 0.5-2 seconds
+- **Volume**: Moderate, avoid being too harsh
+- **Style**: 8-bit retro style or modern minimalist style
 
-你可以从以下来源获取音效文件：
+## Getting Sound Files
 
-1. **免费音效网站**：
+You can get sound files from the following sources:
+
+1. **Free Sound Websites**:
    - Freesound.org
    - OpenGameArt.org
    - Pixabay.com
 
-2. **音效生成工具**：
-   - BFXR（8-bit 音效生成器）
-   - ChipTone（芯片音乐生成器）
+2. **Sound Generation Tools**:
+   - BFXR (8-bit sound generator)
+   - ChipTone (chip music generator)
 
-3. **自己制作**：
-   - 使用 Audacity 等音频编辑软件
-   - 使用在线音效生成器
+3. **Create Your Own**:
+   - Use audio editing software like Audacity
+   - Use online sound generators
 
-## 注意事项
+## Notes
 
-- 确保音效文件大小适中（建议每个文件 < 100KB）
-- 测试音效在不同浏览器中的兼容性
-- 考虑用户的音效偏好设置 
+- Ensure sound file sizes are moderate (recommended < 100KB per file)
+- Test sound compatibility across different browsers
+- Consider user sound preference settings 

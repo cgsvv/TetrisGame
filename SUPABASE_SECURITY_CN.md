@@ -1,29 +1,29 @@
-# Supabase Security Configuration Guide
+# Supabase 安全配置指南
 
-[中文版 / Chinese Version](SUPABASE_SECURITY_CN.md)
+[English Version](SUPABASE_SECURITY.md)
 
-## 1. Enable Row Level Security (RLS)
+## 1. 启用 Row Level Security (RLS)
 
-Run in the Supabase SQL Editor:
+在 Supabase SQL 编辑器中运行：
 
 ```sql
--- Enable RLS
+-- 启用 RLS
 ALTER TABLE leaderboard ENABLE ROW LEVEL SECURITY;
 
--- Allow everyone to read leaderboard (read-only)
+-- 允许所有人读取排行榜（只读）
 CREATE POLICY "Allow public read access" ON leaderboard
   FOR SELECT USING (true);
 
--- Allow score insertion with rate limiting
+-- 允许插入分数，但限制频率
 CREATE POLICY "Allow public insert with rate limit" ON leaderboard
   FOR INSERT WITH CHECK (
-    -- You can add more validation logic
+    -- 可以添加更多验证逻辑
     username IS NOT NULL AND 
     LENGTH(username) <= 50 AND
     score > 0
   );
 
--- Prevent updates and deletes (protect data integrity)
+-- 禁止更新和删除（保护数据完整性）
 CREATE POLICY "No updates allowed" ON leaderboard
   FOR UPDATE USING (false);
 
@@ -31,9 +31,9 @@ CREATE POLICY "No deletes allowed" ON leaderboard
   FOR DELETE USING (false);
 ```
 
-## 2. Add Rate Limiting
+## 2. 添加速率限制
 
-Implement in Supabase Edge Functions:
+在 Supabase Edge Functions 中实现：
 
 ```typescript
 // supabase/functions/rate-limit/index.ts
@@ -42,51 +42,51 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 serve(async (req) => {
   const { username, score } = await req.json()
   
-  // Check user submission frequency
+  // 检查用户提交频率
   const { data: recentSubmissions } = await supabase
     .from('leaderboard')
     .select('created_at')
     .eq('username', username)
-    .gte('created_at', new Date(Date.now() - 60000).toISOString()) // Within 1 minute
+    .gte('created_at', new Date(Date.now() - 60000).toISOString()) // 1分钟内
   
   if (recentSubmissions && recentSubmissions.length >= 3) {
     return new Response(
-      JSON.stringify({ error: 'Too many submissions, please try again later' }),
+      JSON.stringify({ error: '提交过于频繁，请稍后再试' }),
       { status: 429 }
     )
   }
   
-  // Continue processing submission
+  // 继续处理提交
 })
 ```
 
-## 3. Data Validation
+## 3. 数据验证
 
-Add validation on the frontend:
+在前端添加验证：
 
 ```typescript
-// Username validation
+// 用户名验证
 const validateUsername = (username: string) => {
   if (!username || username.length > 50) {
-    throw new Error('Username must be between 1-50 characters')
+    throw new Error('用户名长度必须在1-50字符之间')
   }
   if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test(username)) {
-    throw new Error('Username can only contain letters, numbers, underscores, and Chinese characters')
+    throw new Error('用户名只能包含字母、数字、下划线和中文')
   }
 }
 
-// Score validation
+// 分数验证
 const validateScore = (score: number) => {
   if (score < 0 || score > 999999999) {
-    throw new Error('Invalid score')
+    throw new Error('分数无效')
   }
 }
 ```
 
-## 4. Monitoring and Logging
+## 4. 监控和日志
 
 ```sql
--- Create audit log table
+-- 创建审计日志表
 CREATE TABLE audit_logs (
   id SERIAL PRIMARY KEY,
   action VARCHAR(50) NOT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE audit_logs (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Create trigger to log all operations
+-- 创建触发器记录所有操作
 CREATE OR REPLACE FUNCTION log_leaderboard_changes()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -112,20 +112,20 @@ CREATE TRIGGER leaderboard_audit_trigger
   FOR EACH ROW EXECUTE FUNCTION log_leaderboard_changes();
 ```
 
-## 5. Environment Variable Management
+## 5. 环境变量管理
 
 ```bash
 # .env.local
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
 
-# Use different key for production
+# 生产环境使用不同的 key
 VITE_SUPABASE_ANON_KEY=your-production-anon-key
 ```
 
-## 6. Regular Security Review
+## 6. 定期安全审查
 
-- Monitor API call frequency
-- Check for abnormal data patterns
-- Regularly update dependencies
-- Review access logs 
+- 监控 API 调用频率
+- 检查异常数据模式
+- 定期更新依赖包
+- 审查访问日志 

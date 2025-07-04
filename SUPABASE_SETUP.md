@@ -1,18 +1,20 @@
-# Supabase 设置指南
+# Supabase Setup Guide
 
-## 1. 创建 Supabase 项目
+[中文版 / Chinese Version](SUPABASE_SETUP_CN.md)
 
-1. 访问 [supabase.com](https://supabase.com)
-2. 注册/登录账户
-3. 创建新项目
-4. 等待项目初始化完成
+## 1. Create Supabase Project
 
-## 2. 创建数据库表
+1. Visit [supabase.com](https://supabase.com)
+2. Register/Login to your account
+3. Create a new project
+4. Wait for project initialization to complete
 
-在 Supabase SQL 编辑器中运行以下 SQL：
+## 2. Create Database Table
+
+Run the following SQL in the Supabase SQL Editor:
 
 ```sql
--- 创建排行榜表
+-- Create leaderboard table
 CREATE TABLE leaderboard (
   id SERIAL PRIMARY KEY,
   username VARCHAR(50) NOT NULL,
@@ -22,53 +24,53 @@ CREATE TABLE leaderboard (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
--- 创建索引以提高查询性能
+-- Create indexes for better query performance
 CREATE INDEX idx_leaderboard_score ON leaderboard(score DESC);
 CREATE INDEX idx_leaderboard_username ON leaderboard(username);
 CREATE INDEX idx_leaderboard_created_at ON leaderboard(created_at DESC);
 ```
 
-## 3. 获取 API 密钥
+## 3. Get API Keys
 
-1. 在 Supabase 项目仪表板中，进入 "Settings" > "API"
-2. 复制 "Project URL" 和 "anon public" 密钥
+1. In your Supabase project dashboard, go to "Settings" > "API"
+2. Copy the "Project URL" and "anon public" key
 
-## 4. 配置环境变量
+## 4. Configure Environment Variables
 
-1. 复制 `env.example` 为 `.env.local`
-2. 填入你的 Supabase 配置：
+1. Copy `env.example` to `.env.local`
+2. Fill in your Supabase configuration:
 
 ```env
 VITE_SUPABASE_URL=your_project_url
 VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-## 5. 设置 RLS 策略（可选）
+## 5. Set Up RLS Policies (Optional)
 
-如果需要更严格的数据访问控制，可以设置 Row Level Security：
+If you need stricter data access control, you can set up Row Level Security:
 
 ```sql
--- 启用 RLS
+-- Enable RLS
 ALTER TABLE leaderboard ENABLE ROW LEVEL SECURITY;
 
--- 允许所有人读取排行榜
+-- Allow everyone to read leaderboard
 CREATE POLICY "Allow public read access" ON leaderboard
   FOR SELECT USING (true);
 
--- 允许所有人插入分数
+-- Allow everyone to insert scores
 CREATE POLICY "Allow public insert" ON leaderboard
   FOR INSERT WITH CHECK (true);
 ```
 
-## 6. 测试
+## 6. Test
 
-启动开发服务器：
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-现在你可以：
-- 玩游戏并提交分数
-- 查看排行榜
-- 在排行榜页面排序数据 
+Now you can:
+- Play the game and submit scores
+- View the leaderboard
+- Sort data on the leaderboard page 

@@ -1,107 +1,109 @@
-# 俄罗斯方块游戏
+# Tetris Game
 
-一个使用 React + TypeScript + Vite 构建的现代俄罗斯方块游戏。
+A modern Tetris game built with React + TypeScript + Vite.
 
-## 功能特性
+[中文版 / Chinese Version](README_CN.md)
 
-- 🎮 经典俄罗斯方块玩法
-- 🎨 现代化 UI 设计
-- 🤖 AI 助手模式（支持多个难度等级）
-- ⚡ 可调节游戏速度
-- 🏆 在线排行榜系统
-- 🔊 音效支持
-- 📱 响应式设计
+## Features
 
-## 音效文件
+- 🎮 Classic Tetris gameplay
+- 🎨 Modern UI design
+- 🤖 AI Assistant mode (multiple difficulty levels)
+- ⚡ Adjustable game speed
+- 🏆 Online leaderboard system
+- 🔊 Sound effects support
+- 📱 Responsive design
 
-游戏支持音效功能，请将以下音效文件放置在 `public/sounds/` 目录下：
+## Sound Files
 
-- `move.wav` - 方块移动音效
-- `rotate.wav` - 方块旋转音效
-- `drop.wav` - 硬下落音效
-- `land.wav` - 方块落地音效
-- `clear.wav` - 消行音效
-- `start.wav` - 游戏开始音效
-- `pause.wav` - 游戏暂停音效
-- `resume.wav` - 游戏恢复音效
-- `gameover.wav` - 游戏结束音效
+The game supports sound effects. Please place the following sound files in the `public/sounds/` directory:
 
-音效文件格式建议使用 WAV 格式，采样率 44.1kHz，时长控制在 0.5-2 秒之间。
+- `move.wav` - Piece movement sound
+- `rotate.wav` - Piece rotation sound
+- `drop.wav` - Hard drop sound
+- `land.wav` - Piece landing sound
+- `clear.wav` - Line clear sound
+- `start.wav` - Game start sound
+- `pause.wav` - Game pause sound
+- `resume.wav` - Game resume sound
+- `gameover.wav` - Game over sound
 
-## 安装和运行
+Sound files should be in WAV format, 44.1kHz sample rate, with duration between 0.5-2 seconds.
 
-1. 克隆项目
+## Installation and Setup
+
+1. Clone the repository
 ```bash
 git clone <repository-url>
 cd ChessGame
 ```
 
-2. 安装依赖
+2. Install dependencies
 ```bash
 npm install
 ```
 
-3. 配置环境变量
+3. Configure environment variables
 ```bash
 cp env.example .env.local
 ```
 
-编辑 `.env.local` 文件，填入你的 Supabase 配置：
+Edit the `.env.local` file with your Supabase configuration:
 ```
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-4. 启动开发服务器
+4. Start the development server
 ```bash
 npm run dev
 ```
 
-5. 打开浏览器访问 `http://localhost:5173`
+5. Open your browser and visit `http://localhost:5173`
 
-## 游戏控制
+## Game Controls
 
-- **方向键**：移动方块
-- **空格键**：旋转方块
-- **回车键**：硬下落
-- **P 键**：暂停/恢复游戏
-- **R 键**：重新开始游戏
+- **Arrow Keys**: Move pieces
+- **Space**: Rotate pieces
+- **Enter**: Hard drop
+- **P**: Pause/Resume game
+- **R**: Restart game
 
-## 技术栈
+## Tech Stack
 
-- **前端框架**：React 18
-- **开发语言**：TypeScript
-- **构建工具**：Vite
-- **状态管理**：React Hooks + useReducer
-- **样式**：CSS Modules
-- **后端服务**：Supabase
-- **路由**：React Router
-- **数据获取**：React Query
+- **Frontend Framework**: React 18
+- **Language**: TypeScript
+- **Build Tool**: Vite
+- **State Management**: React Hooks + useReducer
+- **Styling**: CSS Modules
+- **Backend Service**: Supabase
+- **Routing**: React Router
+- **Data Fetching**: React Query
 
-## 项目结构
+## Project Structure
 
 ```
 src/
-├── components/          # React 组件
-├── hooks/              # 自定义 Hooks
-├── lib/                # 第三方库配置
-├── pages/              # 页面组件
-├── styles/             # 样式文件
-├── types/              # TypeScript 类型定义
-├── utils/              # 工具函数
-└── App.tsx             # 主应用组件
+├── components/          # React components
+├── hooks/              # Custom Hooks
+├── lib/                # Third-party library configs
+├── pages/              # Page components
+├── styles/             # Style files
+├── types/              # TypeScript type definitions
+├── utils/              # Utility functions
+└── App.tsx             # Main app component
 ```
 
-## 部署
+## Deployment
 
-项目可以部署到任何支持静态文件托管的平台：
+The project can be deployed to any static file hosting platform:
 
 - Vercel
 - Netlify
 - GitHub Pages
-- 阿里云 OSS
-- 腾讯云 COS
+- Alibaba Cloud OSS
+- Tencent Cloud COS
 
-## 许可证
+## License
 
 MIT License 
