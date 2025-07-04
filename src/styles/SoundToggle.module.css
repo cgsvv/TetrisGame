@@ -1,7 +1,7 @@
 .soundToggle {
-  margin-top: 24px;
-  display: flex;
-  justify-content: flex-end;
+  display: inline-block;
+  margin-right: 12px;
+  height: 40px;
 }
 
 .toggleLabel {
@@ -9,6 +9,24 @@
   align-items: center;
   cursor: pointer;
   user-select: none;
+  background: rgba(44,52,63,0.98);
+  color: #eaf6ff;
+  border: none;
+  border-radius: 8px;
+  padding: 0 18px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  box-shadow: 0 1px 4px #0002;
+  transition: background 0.18s;
+  outline: none;
+  height: 40px;
+  min-width: 90px;
+  justify-content: center;
+  gap: 8px;
+}
+
+.toggleLabel:hover {
+  background: #2a2f3a;
 }
 
 .toggleInput {
@@ -16,36 +34,37 @@
 }
 
 .toggleSlider {
-  width: 36px;
-  height: 20px;
-  background: #ccc;
+  width: 32px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   position: relative;
-  margin-right: 10px;
   transition: background 0.2s;
 }
 
 .toggleInput:checked + .toggleSlider {
-  background: #4caf50;
+  background: #4ade80;
 }
 
 .toggleSlider::before {
   content: '';
   position: absolute;
-  left: 3px;
-  top: 3px;
+  left: 2px;
+  top: 2px;
   width: 14px;
   height: 14px;
-  background: #fff;
+  background: #eaf6ff;
   border-radius: 50%;
   transition: transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .toggleInput:checked + .toggleSlider::before {
-  transform: translateX(16px);
+  transform: translateX(14px);
 }
 
 .toggleText {
-  font-size: 14px;
-  color: #666;
+  font-size: 0.9rem;
+  color: #eaf6ff;
+  white-space: nowrap;
 } 

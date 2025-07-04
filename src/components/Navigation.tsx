@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from '../styles/Navigation.module.css';
 import LanguageSwitcher from './LanguageSwitcher';
+import { SoundToggle } from './SoundToggle';
 import { useTranslation } from 'react-i18next';
 
 export const Navigation: React.FC = () => {
@@ -24,6 +25,7 @@ export const Navigation: React.FC = () => {
           🏆 {t('排行榜')}
         </Link>
         <div style={{ flex: 1 }} />
+        <SoundToggle />
         <LanguageSwitcher />
       </div>
     </nav>

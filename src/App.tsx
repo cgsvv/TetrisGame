@@ -1,24 +1,30 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { useTranslation } from 'react-i18next';
+import './i18n';
+
+// 组件导入
+import { Navigation } from './components/Navigation';
 import { GameBoard } from './components/GameBoard';
 import { NextPiece } from './components/NextPiece';
 import { ScoreBoard } from './components/ScoreBoard';
 import { Controls } from './components/Controls';
 import { GameOver } from './components/GameOver';
+import { ScoreSubmission } from './components/ScoreSubmission';
+import { Leaderboard } from './pages/Leaderboard';
 import { SpeedControl } from './components/SpeedControl';
 import { AIControl } from './components/AIControl';
-import { ScoreSubmission } from './components/ScoreSubmission';
-import { Navigation } from './components/Navigation';
-import { Leaderboard } from './pages/Leaderboard';
+import { CollapsePanel } from './components/CollapsePanel';
+
+// Hooks导入
 import { useGameState } from './hooks/useGameState';
 import { useGameLoop } from './hooks/useGameLoop';
 import { useKeyboard } from './hooks/useKeyboard';
 import { useAI } from './hooks/useAI';
-import { CollapsePanel } from './components/CollapsePanel';
-import { SoundToggle } from './components/SoundToggle';
+
+// 样式导入
 import './styles/global.css';
-import { useTranslation } from 'react-i18next';
 
 // 创建 React Query 客户端
 const queryClient = new QueryClient({
@@ -170,7 +176,6 @@ const GamePage: React.FC = () => {
                 onSetAILevel={setAILevel}
               />
             </CollapsePanel>
-            <SoundToggle />
           </aside>
         </div>
         
