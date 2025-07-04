@@ -58,7 +58,16 @@ export const placePiece = (piece: CurrentPiece, board: number[][]): number[][] =
 };
 
 // 清除完整的行
-export const clearLines = (board: number[][]): { newBoard: number[][], linesCleared: number } => {
+export const clearLines = (board: number[][]): { newBoard: number[][], linesCleared: number, linesToClear: number[] } => {
+  const linesToClear: number[] = [];
+  
+  // 找出要消除的行
+  for (let i = 0; i < board.length; i++) {
+    if (board[i].every(cell => cell !== 0)) {
+      linesToClear.push(i);
+    }
+  }
+  
   const newBoard = board.filter(row => !row.every(cell => cell !== 0));
   const linesCleared = board.length - newBoard.length;
   
@@ -67,7 +76,7 @@ export const clearLines = (board: number[][]): { newBoard: number[][], linesClea
     newBoard.unshift(Array(BOARD_WIDTH).fill(0));
   }
   
-  return { newBoard, linesCleared };
+  return { newBoard, linesCleared, linesToClear };
 };
 
 // 计算分数

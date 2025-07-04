@@ -26,6 +26,8 @@ const initialState: GameState = {
   aiMode: false,
   aiThinking: false,
   aiLevel: 'normal',
+  clearingLines: [],
+  clearAnimationStep: 0,
 };
 
 // 游戏状态更新函数
@@ -159,6 +161,25 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
     case 'SET_AI_THINKING':
       return { ...state, aiThinking: action.thinking };
 
+    case 'START_CLEAR_ANIMATION':
+      return { 
+        ...state, 
+        status: 'clearingLines' as const,
+        clearingLines: action.lines,
+        clearAnimationStep: 0
+      };
+
+    case 'UPDATE_CLEAR_ANIMATION':
+      if (state.status !== 'clearingLines') return state;
+      return { 
+        ...state, 
+        clearAnimationStep: (state.clearAnimationStep + 1) % 4
+      };
+
+    case 'FINISH_CLEAR_ANIMATION':
+      if (state.status !== 'clearingLines') return state;
+      return finishClearAnimation(state);
+
     default:
       return state;
   }
@@ -204,12 +225,7 @@ const placeCurrentPiece = (state: GameState): GameState => {
   if (!state.currentPiece) return state;
 
   const newBoard = placePiece(state.currentPiece, state.board);
-  const { newBoard: clearedBoard, linesCleared } = clearLines(newBoard);
-
-  const newLines = state.lines + linesCleared;
-  const newLevel = Math.floor(newLines / 10) + 1;
-  const newScore = state.score + linesCleared * 100 * newLevel;
-  const newDropSpeed = Math.max(100, 1000 - (newLevel - 1) * 100);
+  const { linesCleared, linesToClear } = clearLines(newBoard);
 
   // 播放落地音效
   if (typeof window !== 'undefined') {
@@ -218,8 +234,45 @@ const placeCurrentPiece = (state: GameState): GameState => {
     audio.play().catch(() => {}); // 忽略播放错误
   }
 
-  // 如果有消行，播放消行音效
-  if (linesCleared > 0 && typeof window !== 'undefined') {
+  // 如果有消行，启动消行动画
+  if (linesCleared > 0) {
+    return {
+      ...state,
+      board: newBoard, // 使用未清除行的板子
+      currentPiece: null,
+      status: 'clearingLines' as const,
+      clearingLines: linesToClear,
+      clearAnimationStep: 0,
+    };
+  }
+
+  return {
+    ...state,
+    board: newBoard,
+    currentPiece: null,
+  };
+};
+
+// 完成消行动画
+const finishClearAnimation = (state: GameState): GameState => {
+  if (state.clearingLines.length === 0) return state;
+
+  // 实际清除行
+  const newBoard = state.board.filter((_, index) => !state.clearingLines.includes(index));
+  
+  // 在顶部添加空行
+  while (newBoard.length < 20) { // BOARD_HEIGHT
+    newBoard.unshift(Array(10).fill(0)); // BOARD_WIDTH
+  }
+
+  const linesCleared = state.clearingLines.length;
+  const newLines = state.lines + linesCleared;
+  const newLevel = Math.floor(newLines / 10) + 1;
+  const newScore = state.score + linesCleared * 100 * newLevel;
+  const newDropSpeed = Math.max(100, 1000 - (newLevel - 1) * 100);
+
+  // 播放消行音效
+  if (typeof window !== 'undefined') {
     const audio = new Audio('/sounds/clear.wav');
     audio.volume = 0.5;
     audio.play().catch(() => {}); // 忽略播放错误
@@ -227,12 +280,14 @@ const placeCurrentPiece = (state: GameState): GameState => {
 
   return {
     ...state,
-    board: clearedBoard,
-    currentPiece: null,
-    dropSpeed: newDropSpeed,
+    board: newBoard,
+    status: 'playing' as const,
+    clearingLines: [],
+    clearAnimationStep: 0,
     lines: newLines,
     level: newLevel,
     score: newScore,
+    dropSpeed: newDropSpeed,
   };
 };
 
@@ -295,6 +350,18 @@ export const useGameState = () => {
     dispatch({ type: 'SET_AI_THINKING', thinking });
   }, []);
 
+  const startClearAnimation = useCallback((lines: number[]) => {
+    dispatch({ type: 'START_CLEAR_ANIMATION', lines });
+  }, []);
+
+  const updateClearAnimation = useCallback(() => {
+    dispatch({ type: 'UPDATE_CLEAR_ANIMATION' });
+  }, []);
+
+  const finishClearAnimation = useCallback(() => {
+    dispatch({ type: 'FINISH_CLEAR_ANIMATION' });
+  }, []);
+
   return {
     state,
     startGame,
@@ -309,5 +376,8 @@ export const useGameState = () => {
     toggleAIMode,
     setAILevel,
     setAIThinking,
+    startClearAnimation,
+    updateClearAnimation,
+    finishClearAnimation,
   };
 }; 

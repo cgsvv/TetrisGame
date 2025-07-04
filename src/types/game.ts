@@ -5,7 +5,7 @@ export type TetrominoType = 'I' | 'O' | 'T' | 'S' | 'Z' | 'J' | 'L';
 export type TetrominoShape = number[][];
 
 // 游戏状态
-export type GameStatus = 'idle' | 'playing' | 'paused' | 'gameOver';
+export type GameStatus = 'idle' | 'playing' | 'paused' | 'gameOver' | 'clearingLines';
 
 // AI等级
 export type AILevel = 'easy' | 'normal' | 'hard';
@@ -45,6 +45,8 @@ export interface GameState {
   aiMode: boolean; // AI模式开关
   aiThinking: boolean; // AI是否正在思考
   aiLevel: AILevel; // AI等级
+  clearingLines: number[]; // 正在消除的行索引
+  clearAnimationStep: number; // 消除动画步骤 (0-3)
 }
 
 // 游戏动作类型
@@ -61,4 +63,7 @@ export type GameAction =
   | { type: 'SET_MANUAL_SPEED'; speed: number }
   | { type: 'TOGGLE_AI_MODE' }
   | { type: 'SET_AI_LEVEL'; level: AILevel }
-  | { type: 'SET_AI_THINKING'; thinking: boolean }; 
+  | { type: 'SET_AI_THINKING'; thinking: boolean }
+  | { type: 'START_CLEAR_ANIMATION'; lines: number[] }
+  | { type: 'UPDATE_CLEAR_ANIMATION' }
+  | { type: 'FINISH_CLEAR_ANIMATION' }; 

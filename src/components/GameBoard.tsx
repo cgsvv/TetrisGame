@@ -63,9 +63,27 @@ export const GameBoard: React.FC<GameBoardProps> = ({ gameState }) => {
       col < currentPiece.position.x + currentPiece.shape[0].length &&
       currentPiece.shape[row - currentPiece.position.y]?.[col - currentPiece.position.x] !== 0;
 
+    // 检查是否在消行动画中
+    const isClearingLine = gameState.status === 'clearingLines' && 
+      gameState.clearingLines.includes(row);
+
+    let className = `${styles.cell} ${cellValue === 0 ? styles.empty : styles.filled}`;
+    
+    if (isCurrentPiece) {
+      className += ` ${styles.current}`;
+    }
+    
+    if (isClearingLine) {
+      className += ` ${styles.clearing}`;
+      // 根据动画步骤添加闪烁效果
+      if (gameState.clearAnimationStep % 2 === 0) {
+        className += ` ${styles.flash}`;
+      }
+    }
+
     return {
       ...baseStyle,
-      className: `${styles.cell} ${cellValue === 0 ? styles.empty : styles.filled} ${isCurrentPiece ? styles.current : ''}`,
+      className,
     };
   };
 

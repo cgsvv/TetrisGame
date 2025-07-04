@@ -45,6 +45,8 @@ const GamePage: React.FC = () => {
     toggleAIMode,
     setAILevel,
     setAIThinking,
+    updateClearAnimation,
+    finishClearAnimation,
   } = useGameState();
 
   const { makeAIDecisionAndExecute } = useAI({
@@ -92,6 +94,24 @@ const GamePage: React.FC = () => {
       return () => clearTimeout(timer);
     }
   }, [state.aiMode, state.status, state.currentPiece, state.aiThinking, makeAIDecisionAndExecute]);
+
+  // 消行动画控制
+  useEffect(() => {
+    if (state.status === 'clearingLines') {
+      const animationTimer = setInterval(() => {
+        updateClearAnimation();
+      }, 150); // 每150ms更新一次动画步骤
+
+      const finishTimer = setTimeout(() => {
+        finishClearAnimation();
+      }, 1200); // 1.2秒后完成动画
+
+      return () => {
+        clearInterval(animationTimer);
+        clearTimeout(finishTimer);
+      };
+    }
+  }, [state.status, updateClearAnimation, finishClearAnimation]);
 
   // 游戏结束时显示分数提交
   useEffect(() => {
