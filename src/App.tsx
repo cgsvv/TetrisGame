@@ -18,6 +18,7 @@ import { useAI } from './hooks/useAI';
 import { CollapsePanel } from './components/CollapsePanel';
 import { SoundToggle } from './components/SoundToggle';
 import './styles/global.css';
+import { useTranslation } from 'react-i18next';
 
 // 创建 React Query 客户端
 const queryClient = new QueryClient({
@@ -48,6 +49,8 @@ const GamePage: React.FC = () => {
     updateClearAnimation,
     finishClearAnimation,
   } = useGameState();
+
+  const { t } = useTranslation();
 
   const { makeAIDecisionAndExecute } = useAI({
     board: state.board,
@@ -138,8 +141,8 @@ const GamePage: React.FC = () => {
   return (
     <div className="app-root">
       <header className="header">
-        <h1>俄罗斯方块</h1>
-        <p>经典游戏，现代体验</p>
+        <h1>{t('俄罗斯方块')}</h1>
+        <p>{t('经典游戏，现代体验')}</p>
       </header>
 
       <main className="main-layout">
@@ -190,8 +193,8 @@ const GamePage: React.FC = () => {
       </main>
 
       <footer className="footer">
-        <p>使用 React + TypeScript + Vite 构建</p>
-        <p>支持键盘控制：方向键移动，空格键旋转，回车键硬下落</p>
+        <p>{t('使用 React + TypeScript + Vite 构建')}</p>
+        <p>{t('支持键盘控制：方向键移动，空格键旋转，回车键硬下落')}</p>
       </footer>
     </div>
   );

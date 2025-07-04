@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { GameState } from '../types/game';
 import { BOARD_WIDTH, BOARD_HEIGHT, TETROMINO_COLORS } from '../utils/constants';
 import styles from '../styles/GameBoard.module.css';
@@ -8,6 +9,7 @@ interface GameBoardProps {
 }
 
 export const GameBoard: React.FC<GameBoardProps> = ({ gameState }) => {
+  const { t } = useTranslation();
   const { board, currentPiece, status } = gameState;
 
   // 创建包含当前方块的完整游戏板
@@ -39,13 +41,13 @@ export const GameBoard: React.FC<GameBoardProps> = ({ gameState }) => {
   const getStatusText = () => {
     switch (status) {
       case 'idle':
-        return '按 Enter 开始游戏';
+        return t('按 Enter 开始游戏');
       case 'playing':
-        return '游戏进行中';
+        return t('游戏进行中');
       case 'paused':
-        return '游戏暂停 - 按 P 继续';
+        return t('游戏暂停 - 按 P 继续');
       case 'gameOver':
-        return '游戏结束';
+        return t('游戏结束');
       default:
         return '';
     }
@@ -110,7 +112,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({ gameState }) => {
       
       {status === 'idle' && (
         <div className={styles.startPrompt}>
-          使用方向键控制方块移动和旋转
+          {t('使用方向键控制方块移动和旋转')}
         </div>
       )}
     </div>

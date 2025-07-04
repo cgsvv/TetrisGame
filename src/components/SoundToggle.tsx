@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { setGlobalMute, getGlobalMute } from '../hooks/useSound';
 import styles from '../styles/SoundToggle.module.css';
+import { useTranslation } from 'react-i18next';
 
 export const SoundToggle: React.FC = () => {
+  const { t } = useTranslation();
   const [muted, setMuted] = useState(getGlobalMute());
 
   useEffect(() => {
@@ -20,7 +22,7 @@ export const SoundToggle: React.FC = () => {
         />
         <span className={styles.toggleSlider}></span>
         <span className={styles.toggleText}>
-          {muted ? '音效已关闭' : '音效已开启'}
+          {muted ? t('音效已关闭') : t('音效已开启')}
         </span>
       </label>
     </div>

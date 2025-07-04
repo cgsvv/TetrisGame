@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { TetrominoType } from '../types/game';
 import { TETROMINOS } from '../utils/tetrominos';
 import { TETROMINO_COLORS } from '../utils/constants';
@@ -8,12 +9,13 @@ interface NextPieceProps {
 }
 
 export const NextPiece: React.FC<NextPieceProps> = ({ nextPiece }) => {
+  const { t } = useTranslation();
   const shape = TETROMINOS[nextPiece][0];
   const color = TETROMINO_COLORS[nextPiece];
 
   return (
     <div className="info-panel">
-      <h3>下一个方块</h3>
+      <h3>{t('下一个方块')}</h3>
       <div style={{
         display: 'grid',
         gridTemplateColumns: `repeat(${shape[0].length}, 20px)`,
