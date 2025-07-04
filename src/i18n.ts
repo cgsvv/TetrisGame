@@ -47,6 +47,11 @@ const resources = {
       "加载失败": "Failed to load",
       "重试": "Retry",
       "暂无数据": "No data",
+      "请输入用户名": "Please enter username",
+      "提交失败，请重试": "Submission failed, please try again",
+      "你的分数没有超过现有记录": "Your score doesn't beat your existing record",
+      "现有最高分": "Current best score",
+      "提交中...": "Submitting...",
       // ... 其他文案
     }
   },
@@ -95,6 +100,11 @@ const resources = {
       "加载失败": "加载失败",
       "重试": "重试",
       "暂无数据": "暂无数据",
+      "请输入用户名": "请输入用户名",
+      "提交失败，请重试": "提交失败，请重试",
+      "你的分数没有超过现有记录": "你的分数没有超过现有记录",
+      "现有最高分": "现有最高分",
+      "提交中...": "提交中...",
       // ... 其他文案
     }
   }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { submitScore, checkUsernameExists, getUserBestScore } from '../lib/leaderboard';
 import styles from '../styles/ScoreSubmission.module.css';
 
 interface ScoreSubmissionProps {
@@ -15,6 +16,7 @@ export const ScoreSubmission: React.FC<ScoreSubmissionProps> = ({ score, level, 
   const [username, setUsername] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [existingScore, setExistingScore] = useState<number | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,13 +24,36 @@ export const ScoreSubmission: React.FC<ScoreSubmissionProps> = ({ score, level, 
       setError(t('请输入用户名'));
       return;
     }
+    
     setSubmitting(true);
     setError('');
+    
     try {
-      // 假设有 submitScore API
-      // await submitScore({ username, score, level, lines });
+      // 检查用户是否已存在
+      const userExists = await checkUsernameExists(username.trim());
+      
+      if (userExists) {
+        // 获取用户现有最高分
+        const existingUser = await getUserBestScore(username.trim());
+        if (existingUser && existingUser.score >= score) {
+          setError(t('你的分数没有超过现有记录'));
+          setSubmitting(false);
+          return;
+        }
+        setExistingScore(existingUser?.score || null);
+      }
+
+      // 提交分数
+      await submitScore({
+        username: username.trim(),
+        score,
+        level,
+        lines
+      });
+      
       onSubmitted();
     } catch (err) {
+      console.error('Submit score error:', err);
       setError(t('提交失败，请重试'));
     } finally {
       setSubmitting(false);
@@ -48,17 +73,27 @@ export const ScoreSubmission: React.FC<ScoreSubmissionProps> = ({ score, level, 
               onChange={e => setUsername(e.target.value)}
               disabled={submitting}
               maxLength={16}
+              placeholder={t('请输入用户名')}
             />
           </div>
           <div className={styles.formGroup}>
-            <span>{t('分数')}: {score}</span>
+            <span>{t('分数')}: {score.toLocaleString()}</span>
             <span>{t('等级')}: {level}</span>
             <span>{t('消除行数')}: {lines}</span>
           </div>
+          {existingScore !== null && (
+            <div className={styles.existingScore}>
+              {t('现有最高分')}: {existingScore.toLocaleString()}
+            </div>
+          )}
           {error && <div className={styles.error}>{error}</div>}
           <div className={styles.actions}>
-            <button type="submit" disabled={submitting}>{t('提交分数')}</button>
-            <button type="button" onClick={onClose} disabled={submitting}>{t('关闭')}</button>
+            <button type="submit" disabled={submitting}>
+              {submitting ? t('提交中...') : t('提交分数')}
+            </button>
+            <button type="button" onClick={onClose} disabled={submitting}>
+              {t('关闭')}
+            </button>
           </div>
         </form>
       </div>
