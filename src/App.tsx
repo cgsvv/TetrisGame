@@ -200,6 +200,9 @@ const GamePage: React.FC = () => {
       <footer className="footer">
         <p>{t('使用 React + TypeScript + Vite 构建')}</p>
         <p>{t('支持键盘控制：方向键移动，空格键旋转，回车键硬下落')}</p>
+        <p style={{ marginTop: '8px', fontSize: '0.9rem', opacity: 0.8 }}>
+          Powered By <span style={{ color: '#ffd700', fontWeight: '600' }}>@Victor</span>
+        </p>
       </footer>
     </div>
   );
