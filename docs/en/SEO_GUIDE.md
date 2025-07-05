@@ -1,6 +1,6 @@
 # SEO Guide for Tetris Game
 
-[中文版 / Chinese Version](SEO_GUIDE_CN.md)
+[中文版 / Chinese Version](../zh/SEO_GUIDE_CN.md)
 
 ## Overview
 

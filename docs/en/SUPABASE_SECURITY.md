@@ -1,6 +1,6 @@
 # Supabase Security Configuration Guide
 
-[中文版 / Chinese Version](SUPABASE_SECURITY_CN.md)
+[中文版 / Chinese Version](../zh/SUPABASE_SECURITY_CN.md)
 
 ## 1. Enable Row Level Security (RLS)
 

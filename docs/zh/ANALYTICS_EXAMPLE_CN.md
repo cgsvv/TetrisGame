@@ -1,6 +1,6 @@
 # Google Analytics 事件跟踪示例
 
-[English Version](ANALYTICS_EXAMPLE.md)
+[English Version](../en/ANALYTICS_EXAMPLE.md)
 
 ## Google Analytics 如何跟踪您的游戏事件
 

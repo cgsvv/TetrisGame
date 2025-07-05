@@ -1,6 +1,6 @@
 # Supabase 安全配置指南
 
-[English Version](SUPABASE_SECURITY.md)
+[English Version](../en/SUPABASE_SECURITY.md)
 
 ## 1. 启用 Row Level Security (RLS)
 

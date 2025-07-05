@@ -1,6 +1,6 @@
 # Google SEO 指南 - 让您的俄罗斯方块游戏被找到
 
-[English Version](GOOGLE_SEO_GUIDE.md)
+[English Version](../en/GOOGLE_SEO_GUIDE.md)
 
 ## 为什么您的网站还没有被找到
 

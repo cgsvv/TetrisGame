@@ -1,6 +1,6 @@
 # 网站改进指南 - 分析设置后
 
-[English Version](PERFORMANCE_IMPROVEMENTS.md)
+[English Version](../en/PERFORMANCE_IMPROVEMENTS.md)
 
 ## 🚀 性能与用户体验
 

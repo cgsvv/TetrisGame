@@ -1,6 +1,6 @@
 # Google Analytics Event Tracking Example
 
-[中文版 / Chinese Version](ANALYTICS_EXAMPLE_CN.md)
+[中文版 / Chinese Version](../zh/ANALYTICS_EXAMPLE_CN.md)
 
 ## How Google Analytics Tracks Your Game Events
 

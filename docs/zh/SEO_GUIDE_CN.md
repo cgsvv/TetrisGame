@@ -1,6 +1,6 @@
 # 俄罗斯方块游戏 SEO 指南
 
-[English Version](SEO_GUIDE.md)
+[English Version](../en/SEO_GUIDE.md)
 
 ## 概述
 

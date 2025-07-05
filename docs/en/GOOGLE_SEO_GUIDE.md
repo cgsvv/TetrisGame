@@ -1,6 +1,6 @@
 # Google SEO Guide - Get Your Tetris Game Found
 
-[中文版 / Chinese Version](GOOGLE_SEO_GUIDE_CN.md)
+[中文版 / Chinese Version](../zh/GOOGLE_SEO_GUIDE_CN.md)
 
 ## Why Your Site Isn't Found Yet
 

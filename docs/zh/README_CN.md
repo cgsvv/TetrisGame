@@ -2,7 +2,7 @@
 
 一个使用 React + TypeScript + Vite 构建的现代俄罗斯方块游戏。
 
-[English Version](README.md)
+[English Version](../en/README.md)
 
 ## 功能特性
 

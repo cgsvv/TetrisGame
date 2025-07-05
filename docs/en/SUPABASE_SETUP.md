@@ -1,6 +1,6 @@
 # Supabase Setup Guide
 
-[中文版 / Chinese Version](SUPABASE_SETUP_CN.md)
+[中文版 / Chinese Version](../zh/SUPABASE_SETUP_CN.md)
 
 ## 1. Create Supabase Project
 

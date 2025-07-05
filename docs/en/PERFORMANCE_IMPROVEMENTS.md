@@ -1,6 +1,6 @@
 # Website Improvements Guide - Post Analytics Setup
 
-[中文版 / Chinese Version](PERFORMANCE_IMPROVEMENTS_CN.md)
+[中文版 / Chinese Version](../zh/PERFORMANCE_IMPROVEMENTS_CN.md)
 
 ## 🚀 Performance & User Experience
 

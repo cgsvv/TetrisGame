@@ -1,6 +1,6 @@
 # Supabase 设置指南
 
-[English Version](SUPABASE_SETUP.md)
+[English Version](../en/SUPABASE_SETUP.md)
 
 ## 1. 创建 Supabase 项目
 
