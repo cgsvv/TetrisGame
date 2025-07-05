@@ -38,6 +38,13 @@ All documentation has been organized in the [`./docs/`](./docs/) directory:
 - **[🇺🇸 English Docs](./docs/en/)** - English documentation
 - **[🇨🇳 Chinese Docs](./docs/zh/)** - 中文文档
 
+## 🛠️ Development Tools
+
+Utility tools for asset generation are in the [`./tools/`](./tools/) directory:
+
+- **[🎵 Sound Generator](./tools/generate_sounds.html)** - Generate game sound effects
+- **[🖼️ Asset Generator](./tools/generate-assets.html)** - Generate visual assets
+
 ### Quick Links
 
 - **[Setup Guide](./docs/en/README.md)** - Project setup and configuration
@@ -53,6 +60,17 @@ All documentation has been organized in the [`./docs/`](./docs/) directory:
 - **Analytics**: Google Analytics 4
 - **Deployment**: Vercel
 - **Internationalization**: react-i18next
+
+## 📁 Project Structure
+
+```
+├── src/                    # Source code
+├── public/                 # Static assets
+├── docs/                   # Documentation (en/ & zh/)
+├── tools/                  # Development tools
+├── scripts/                # Build scripts
+└── README.md              # Project overview
+```
 
 ## 🎯 Key Features
 
